@@ -10,8 +10,7 @@ public class ServoProfile{
 
     public Servo servo_left;
     public Servo servo_right;
-    private double previousEndPosition;
-    private double currentPosition;
+
     public MotionProfile servoProfile1;
     public ElapsedTime timer = new ElapsedTime();
 

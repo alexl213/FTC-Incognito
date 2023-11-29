@@ -10,7 +10,6 @@ public class ServoProfile{
 
     public Servo servo_left;
     public Servo servo_right;
-    public String dog = "dog";
 
     public MotionProfile servoProfile1;
     public ElapsedTime timer = new ElapsedTime();

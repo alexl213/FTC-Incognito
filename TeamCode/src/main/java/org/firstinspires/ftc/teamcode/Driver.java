@@ -120,26 +120,27 @@ import com.qualcomm.robotcore.util.Range;
                     servoProfile.generateProfile(.34, .23, .3, .9);
                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .9 && opModeIsActive()) {
                         servoProfile.setServoPath();
-
-
                     }
+                    armAngle.setPosition(.34);
                     // armAngle.setPosition(0);
                     // if(runtime.seconds() == .6){
                     // //sleep(600);
                     // axonRight.setPosition(.015);
                     // axonLeft.setPosition(.9);
                     // }
-                    // if(runtime.seconds() == 1.6){
+                     //if(runtime.seconds() == 1.6){
                     // //sleep(1000);
                     // armAngle.setPosition(.42);
                 }
 
                 if (gamepad2.dpad_down) {
+                    armAngle.setPosition(0);
                     servoProfile.generateProfile(.34, .23, .9, .3);
                     runtime.reset();
                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() > .3 && opModeIsActive()) {
                         servoProfile.setServoPath();
                     }
+                    armAngle.setPosition(.34);
 //                    armAngle.setPosition(0);
 //                    sleep(300);
 //                    axonRight.setPosition(.5);
@@ -219,7 +220,7 @@ import com.qualcomm.robotcore.util.Range;
                 fleftDrive.setPower(fleftPower);
                 frightDrive.setPower(frightPower);
                 //intake.setPower(intakePower);
-                //scoringRight.setPower(scoringrightPower);
+                scoringRight.setPower(scoringrightPower);
                 scoringLeft.setPower(scoringleftPower);
 
 

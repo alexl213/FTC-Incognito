@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -34,7 +33,6 @@ import com.qualcomm.robotcore.util.Range;
 
         public ServoProfile servoProfile = new ServoProfile();
 
-        public MotorLogic rightstick_y = new MotorLogic();
 
 
         @Override
@@ -71,17 +69,9 @@ import com.qualcomm.robotcore.util.Range;
             //intake.setDirection(DcMotor.Direction.FORWARD);
             scoringLeft.setDirection(DcMotor.Direction.FORWARD);
             scoringRight.setDirection(DcMotor.Direction.REVERSE);
-            hangLeft.setDirection(DcMotor.Direction.REVERSE);
-            hangRight.setDirection(DcMotor.Direction.FORWARD);
 
-            hangLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            hangRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            hangLeft.setTargetPosition(300);
-            hangRight.setTargetPosition(300);
-
-            hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            hangRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //537.6 motor ticks per revolution
+            hangLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //537.6 motor ticks per revolution
 
 
             // Setup a variable for each drive wheel to save power level for telemetry
@@ -128,6 +118,24 @@ import com.qualcomm.robotcore.util.Range;
                     intakeDrop.setPower(-1);
                 }
                 intakeDrop.setPower(0);
+
+                if (gamepad2.y){ //hanging position going up to grab on to pole
+                    hangLeft.setTargetPosition(-1855);
+                    hangRight.setTargetPosition(1828);
+                    hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    hangLeft.setPower(.4);
+                    hangRight.setPower(.4);
+                }
+
+                if (gamepad2.x) { //hanging position going down to lift robot off ground
+                    hangLeft.setTargetPosition(18);
+                    hangRight.setTargetPosition(0);
+                    hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    hangLeft.setPower(.4);
+                    hangRight.setPower(.4);
+                }
 
                 if (gamepad2.dpad_up) {
                     armAngle.setPosition(0);
@@ -247,6 +255,8 @@ import com.qualcomm.robotcore.util.Range;
                 }
 
 
+
+
                 // Send calculated power to wheels
                 bleftDrive.setPower(bleftPower);
                 brightDrive.setPower(brightPower);
@@ -259,6 +269,8 @@ import com.qualcomm.robotcore.util.Range;
                 // Show the elapsed game time and wheel power.
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
                 telemetry.addData("Motors", "bleftDrive (%100f), brightDrive (%100f)", bleftPower, brightPower);
+                telemetry.addData("Set Position Left: ", hangLeft.getCurrentPosition());
+                telemetry.addData("Set Position Right: ", hangRight.getCurrentPosition());
                 telemetry.update();
             }
         }

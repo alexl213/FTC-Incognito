@@ -40,7 +40,7 @@ public class ServoProfile{
     }
     public void setPositionsSynced(double leftPos){
         servo_left.setPosition(leftPos);
-        servo_right.setPosition(.91-leftPos);
+        servo_right.setPosition(1-leftPos);//.91
 
     }
 

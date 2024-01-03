@@ -111,10 +111,10 @@ import com.qualcomm.robotcore.util.Range;
                 scoringrightPower = Range.clip(scoring, -0.65, 0.1);
 
 
-                while (gamepad2.a) {
+                while (gamepad2.a) { //zero armAngle
                     armAngle.setPosition(0);
                 }
-                while (gamepad2.b) {
+                while (gamepad2.b) {//obsolete
                     intakeDrop.setPower(-1);
                 }
                 intakeDrop.setPower(0);

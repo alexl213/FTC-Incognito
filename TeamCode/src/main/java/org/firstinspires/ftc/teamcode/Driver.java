@@ -112,12 +112,15 @@ import com.qualcomm.robotcore.util.Range;
 
 
                 while (gamepad2.a) { //zero armAngle
+                    scoringservoLeft.setPosition(.1);
+                    scoringservoRight.setPosition(.3);
                     armAngle.setPosition(0);
                 }
                 while (gamepad2.b) {//obsolete
-                    intakeDrop.setPower(-1);
+                    scoringservoLeft.setPosition(.1);
+                    scoringservoRight.setPosition(.3);
+                    armAngle.setPosition(.38);
                 }
-                intakeDrop.setPower(0);
 
                 if (gamepad2.y){ //hanging position going up to grab on to pole
                     hangLeft.setTargetPosition(-1855);
@@ -133,26 +136,21 @@ import com.qualcomm.robotcore.util.Range;
                     hangRight.setTargetPosition(0);
                     hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    hangLeft.setPower(.4);
-                    hangRight.setPower(.4);
+                    hangLeft.setPower(.7);
+                    hangRight.setPower(.7);
                 }
 
                 if (gamepad2.dpad_up) {
-                    armAngle.setPosition(0);
+                    armAngle.setPosition(.36);
+                    scoringservoLeft.setPosition(.1);
+                    scoringservoRight.setPosition(.3);
                     runtime.reset();
-                    servoProfile.generateProfile(.34, .23, .3, .9);
-                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .9 && opModeIsActive()) {
-                         bleftPower = Range.clip(drive - strafe - turn, -1, 1);
-                         brightPower = Range.clip(drive + strafe + turn, -1, 1);
-                         fleftPower = Range.clip(drive - strafe + turn, -1, 1);
-                         frightPower = Range.clip(drive + strafe - turn, -1, 1);
-                         intakePower = Range.clip(intake1, -.45, .45);
-                         scoringleftPower = Range.clip(scoring, -0.65, 0.1);
-                         scoringrightPower = Range.clip(scoring, -0.65, 0.1);
-                         servoProfile.setServoPath();
+                    servoProfile.generateProfile(.34, .23, .21, .8);
+                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive()) {
+                         servoProfile.setServoPath(bleftPower, brightPower, fleftPower, frightPower, intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+                                 ,fleftDrive, frightDrive, drive, strafe, turn, intake1, scoring, gamepad1, gamepad2);
 
                      }
-                    armAngle.setPosition(.50);
 
                      //armAngle.setPosition(0);
                     // if(runtime.seconds() == .6){
@@ -167,20 +165,17 @@ import com.qualcomm.robotcore.util.Range;
 
                 if (gamepad2.dpad_down) {
                      //armAngle.setPosition(0);
+                    scoringservoLeft.setPosition(.1);
+                    scoringservoRight.setPosition(.3);
                      runtime.reset();
-                     servoProfile.generateProfile(.34, .23, .9, .3);
-                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .29999 &&opModeIsActive() || runtime.seconds() < 3.5 && opModeIsActive()) {
-                         bleftPower = Range.clip(drive - strafe - turn, -1, 1);
-                         brightPower = Range.clip(drive + strafe + turn, -1, 1);
-                         fleftPower = Range.clip(drive - strafe + turn, -1, 1);
-                         frightPower = Range.clip(drive + strafe - turn, -1, 1);
-                         intakePower = Range.clip(intake1, -.45, .45);
-                         scoringleftPower = Range.clip(scoring, -0.65, 0.1);
-                         scoringrightPower = Range.clip(scoring, -0.65, 0.1);
-                         servoProfile.setServoPath();
+                     servoProfile.generateProfile(.34, .23, .8, .21);
+//                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .29999 &&opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                    while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .20999 &&opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                         servoProfile.setServoPath(bleftPower, brightPower, fleftPower, frightPower, intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+                         ,fleftDrive, frightDrive, drive, strafe, turn, intake1, scoring, gamepad1, gamepad2);
 
                     }
-                     armAngle.setPosition(.34);
+                     armAngle.setPosition(.0);
 
 //                    armAngle.setPosition(0);
 //                    sleep(300);
@@ -240,18 +235,18 @@ import com.qualcomm.robotcore.util.Range;
 //                    idle();
 //                }
 
-                if (gamepad2.left_trigger > 0.2) {
-                    scoringservoRight.setPosition(0);
+                if (gamepad2.right_bumper) {
+                    scoringservoRight.setPosition(.1);//0
                 }
-                if (gamepad2.left_bumper) {
-                    scoringservoRight.setPosition(.55);
+                if (gamepad2.right_trigger > 0.2) {
+                    scoringservoRight.setPosition(.3);//.55
                 }
 
-                if (gamepad2.right_trigger > 0.2) {
-                    scoringservoLeft.setPosition(.55);
+                if (gamepad2.left_bumper) {
+                    scoringservoLeft.setPosition(.3);//.55
                 }
-                if (gamepad2.right_bumper) {
-                    scoringservoLeft.setPosition(0);
+                if (gamepad2.left_trigger > 0.2) {
+                    scoringservoLeft.setPosition(.1);//0
                 }
 
 

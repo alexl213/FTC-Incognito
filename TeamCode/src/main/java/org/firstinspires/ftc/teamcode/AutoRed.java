@@ -6,6 +6,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -31,13 +32,22 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "CloseAutoRed")
+@Autonomous(name = "AutoRed")
 
-public class CloseAutoRed extends LinearOpMode {
+public class AutoRed extends LinearOpMode {
 
+    private Servo scoringservoLeft = null;
+    private Servo scoringservoRight = null;
     double cX = 0;
     double cY = 0;
     double width = 0;
+    public ServoProfile servoProfile = new ServoProfile();
+    private Servo axonRight = null;
+    private Servo axonLeft = null;
+    private DcMotor bleftDrive = null;
+    private DcMotor brightDrive = null;
+    private DcMotor fleftDrive = null;
+    private DcMotor frightDrive = null;
 
     private OpenCvCamera controlHubCam;  // Use OpenCvCamera class from FTC SDK
     private static final int CAMERA_WIDTH = 1920; // width  of wanted camera resolution
@@ -50,6 +60,13 @@ public class CloseAutoRed extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        scoringservoLeft = hardwareMap.get(Servo.class, "scoringLeft");
+        scoringservoRight = hardwareMap.get(Servo.class, "scoringRight");
+        bleftDrive = hardwareMap.get(DcMotor.class, "bleft_Drive");
+        brightDrive = hardwareMap.get(DcMotor.class, "bright_Drive");
+        fleftDrive = hardwareMap.get(DcMotor.class, "fleft_Drive");
+        frightDrive = hardwareMap.get(DcMotor.class, "fright_Drive");
 
         initOpenCV();
         FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -64,37 +81,125 @@ public class CloseAutoRed extends LinearOpMode {
 //            telemetry.addData("Distance in Inch", (getDistance(width)));
 //            telemetry.update();
 
-            Servo armAngle = null;
-            armAngle = hardwareMap.get(Servo.class, "armAngle");
-            armAngle.setPosition(.36);
-
                 SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
                 Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
 
                 drive.setPoseEstimate(startPose);
 
-                Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(), true)
-                    .forward(3)
+                Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
+                    .forward(-28)
                     .build();
 
-//                Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-//                    .splineTo(new Vector2d(20, 9), Math.toRadians(0))
-//                    .build();
+            Trajectory traj2 = drive.trajectoryBuilder(new Pose2d())
+                    .forward(-22)
+                    .build();
+
+
 
             if (opModeIsActive() && cX > 1450) {
                 telemetry.addData("Location: ", "Right");
                 telemetry.update();
+                servoProfile.initServos(axonLeft, axonRight);
+                scoringservoLeft.setPosition(.1);
+                scoringservoRight.setPosition(.3);
+                Servo armAngle = null;
+                armAngle = hardwareMap.get(Servo.class, "armAngle");
+                armAngle.setPosition(.36);
+                sleep(500);
+                controlHubCam.stopStreaming();
+                drive.followTrajectory(traj2);
+                drive.turn(Math.toRadians(112));
+
+                bleftDrive.setPower(0.15);
+                brightDrive.setPower(0.15);
+                fleftDrive.setPower(0.15);
+                frightDrive.setPower(0.15);
+                sleep(400);
+
+                armAngle.setPosition(0);
+                sleep(500);
+                scoringservoLeft.setPosition(.3);
+                sleep(300);
+
+                bleftDrive.setPower(-0.15);
+                brightDrive.setPower(-0.15);
+                fleftDrive.setPower(-0.15);
+                frightDrive.setPower(-0.15);
+                sleep(1250);
+
+                bleftDrive.setPower(0);
+                brightDrive.setPower(0);
+                fleftDrive.setPower(0);
+                frightDrive.setPower(0);
+                sleep(10000000);
             }
             if (opModeIsActive() && cX < 400) {
                 telemetry.addData("Location: ", "Left");
                 telemetry.update();
+                servoProfile.initServos(axonLeft, axonRight);
+                scoringservoLeft.setPosition(.1);
+                scoringservoRight.setPosition(.3);
+                Servo armAngle = null;
+                armAngle = hardwareMap.get(Servo.class, "armAngle");
+                armAngle.setPosition(.36);
+                sleep(500);
+                controlHubCam.stopStreaming();
+                drive.followTrajectory(traj2);
+                drive.turn(Math.toRadians(-127));
+
+                bleftDrive.setPower(0.15);
+                brightDrive.setPower(0.15);
+                fleftDrive.setPower(0.15);
+                frightDrive.setPower(0.15);
+                sleep(400);
+
+                armAngle.setPosition(0);
+                sleep(500);
+                scoringservoLeft.setPosition(.3);
+                sleep(300);
+
+                bleftDrive.setPower(-0.15);
+                brightDrive.setPower(-0.15);
+                fleftDrive.setPower(-0.15);
+                frightDrive.setPower(-0.15);
+                sleep(1250);
+
+                bleftDrive.setPower(0);
+                brightDrive.setPower(0);
+                fleftDrive.setPower(0);
+                frightDrive.setPower(0);
+                sleep(10000000);
             }
             if (opModeIsActive() && cX < 1450 && cX > 400) {
                 telemetry.addData("Location: ", "Center");
                 telemetry.update();
+                servoProfile.initServos(axonLeft, axonRight);
+                scoringservoLeft.setPosition(.1);
+                scoringservoRight.setPosition(.3);
+                Servo armAngle = null;
+                armAngle = hardwareMap.get(Servo.class, "armAngle");
+                armAngle.setPosition(.36);
+                sleep(500);
+                controlHubCam.stopStreaming();
                 drive.followTrajectory(traj1);
+                drive.turn(Math.toRadians(180));
 
+                armAngle.setPosition(0);
+                sleep(500);
+                scoringservoLeft.setPosition(.3);
+
+                bleftDrive.setPower(-0.15);
+                brightDrive.setPower(-0.15);
+                fleftDrive.setPower(-0.15);
+                frightDrive.setPower(-0.15);
+                sleep(1250);
+
+                bleftDrive.setPower(0);
+                brightDrive.setPower(0);
+                fleftDrive.setPower(0);
+                frightDrive.setPower(0);
+                sleep(10000000);
             }
             // The OpenCV pipeline automatically processes frames and handles detection
         }
@@ -163,7 +268,7 @@ public class CloseAutoRed extends LinearOpMode {
             Mat hsvFrame = new Mat();
             Imgproc.cvtColor(frame, hsvFrame, Imgproc.COLOR_BGR2HSV);
 
-            Scalar lowerYellow = new Scalar(100, 100, 100);
+            Scalar lowerYellow = new Scalar(100, 50, 50);
             Scalar upperYellow = new Scalar(180, 255, 255);
 
 

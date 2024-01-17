@@ -95,17 +95,17 @@ import com.qualcomm.robotcore.util.Range;
             while (opModeIsActive()) {
                 // POV Mode uses left stick to go forward, and right stick to turn.
                 // - This uses basic math to combine motions and is easier to drive straight.
-                double drive = -gamepad1.left_stick_y;
+                double drive1 = -gamepad1.left_stick_y;
                 double turn = gamepad1.right_stick_x;
                 double strafe = -gamepad1.left_stick_x;
                 double intake1 = gamepad2.left_stick_x;
                 double scoring = gamepad2.right_stick_y;
                 servoProfile.initServos(axonLeft, axonRight);
 
-                bleftPower = Range.clip(drive - strafe - turn, -1, 1);
-                brightPower = Range.clip(drive + strafe + turn, -1, 1);
-                fleftPower = Range.clip(drive - strafe + turn, -1, 1);
-                frightPower = Range.clip(drive + strafe - turn, -1, 1);
+                bleftPower = Range.clip(drive1 - strafe - turn, -1, 1);
+                brightPower = Range.clip(drive1 + strafe + turn, -1, 1);
+                fleftPower = Range.clip(drive1 - strafe + turn, -1, 1);
+                frightPower = Range.clip(drive1 + strafe - turn, -1, 1);
                 intakePower = Range.clip(intake1, -.45, .45);
                 scoringleftPower = Range.clip(scoring, -0.65, 0.1);
                 scoringrightPower = Range.clip(scoring, -0.65, 0.1);
@@ -148,7 +148,7 @@ import com.qualcomm.robotcore.util.Range;
                     servoProfile.generateProfile(.34, .23, .21, .8);
                      while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive()) {
                          servoProfile.setServoPath(bleftPower, brightPower, fleftPower, frightPower, intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                                 ,fleftDrive, frightDrive, drive, strafe, turn, intake1, scoring, gamepad1, gamepad2);
+                                 ,fleftDrive, frightDrive, drive1, strafe, turn, intake1, scoring, gamepad1, gamepad2);
 
                      }
 
@@ -172,7 +172,7 @@ import com.qualcomm.robotcore.util.Range;
 //                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .29999 &&opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .20999 &&opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                          servoProfile.setServoPath(bleftPower, brightPower, fleftPower, frightPower, intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                         ,fleftDrive, frightDrive, drive, strafe, turn, intake1, scoring, gamepad1, gamepad2);
+                         ,fleftDrive, frightDrive, drive1, strafe, turn, intake1, scoring, gamepad1, gamepad2);
 
                     }
                      armAngle.setPosition(.0);

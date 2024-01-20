@@ -60,7 +60,6 @@ public class AutoBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
         scoringservoLeft = hardwareMap.get(Servo.class, "scoringLeft");
         scoringservoRight = hardwareMap.get(Servo.class, "scoringRight");
         bleftDrive = hardwareMap.get(DcMotor.class, "bleft_Drive");
@@ -160,6 +159,7 @@ public class AutoBlue extends LinearOpMode {
                 sleep(300);
 
                 bleftDrive.setPower(-0.15);
+
                 brightDrive.setPower(-0.15);
                 fleftDrive.setPower(-0.15);
                 frightDrive.setPower(-0.15);

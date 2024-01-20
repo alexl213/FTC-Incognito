@@ -8,10 +8,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 
-    @TeleOp(name="Robott", group="Linear Opmode")
 
-    public class Driver extends LinearOpMode {
+@TeleOp(name="Robott", group="Linear Opmode")
+
+    public class Driver extends LinearOpMode{
 
         // Declare OpMode members.
         private ElapsedTime runtime = new ElapsedTime();
@@ -32,6 +34,7 @@ import com.qualcomm.robotcore.util.Range;
         private DcMotor hangRight = null;
 
         public ServoProfile servoProfile = new ServoProfile();
+        public DrivingLogic robot = new DrivingLogic(hardwareMap, gamepad1);
 
 
 

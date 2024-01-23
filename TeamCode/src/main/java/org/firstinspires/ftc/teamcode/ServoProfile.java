@@ -10,7 +10,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-public class ServoProfile {
+import org.firstinspires.ftc.teamcode.util.DrivingLogic;
+
+public class ServoProfile{
 
     public Servo servo_left;
     public Servo servo_right;
@@ -18,32 +20,25 @@ public class ServoProfile {
     public MotionProfile servoProfile1;
     public ElapsedTime timer = new ElapsedTime();
 
+
     double leftPos;
 
 
 
 
-    public void setServoPath(double bleftPower, double brightPower, double fleftPower, double frightPower, double intakePower, double scoringleftPower,
-                             double scoringrightPower, DcMotor bleftDrive, DcMotor brightDrive, DcMotor fleftDrive, DcMotor frightDrive, double drive, double strafe,
-                             double turn, double intake1, double scoring, Gamepad gamepad1, Gamepad gamepad2){
+    public void setServoPath( double intakePower, double scoringleftPower,
+                             double scoringrightPower, DcMotor bleftDrive, DcMotor brightDrive, DcMotor fleftDrive, DcMotor frightDrive, double intake1, double scoring, Gamepad gamepad1, Gamepad gamepad2, DrivingLogic robot){
 
         leftPos = servoProfile1.get(timer.seconds()).getX();
-         drive = -gamepad1.left_stick_y;
-         turn = gamepad1.right_stick_x;
-         strafe = -gamepad1.left_stick_x;
+
         intake1 = gamepad2.left_stick_x;
         scoring = gamepad2.right_stick_y;
-        bleftPower = Range.clip(drive - strafe - turn, -1, 1);
-        brightPower = Range.clip(drive + strafe + turn, -1, 1);
-        fleftPower = Range.clip(drive - strafe + turn, -1, 1);
-        frightPower = Range.clip(drive + strafe - turn, -1, 1);
         intakePower = Range.clip(intake1, -.45, .45);
         scoringleftPower = Range.clip(scoring, -0.65, 0.1);
         scoringrightPower = Range.clip(scoring, -0.65, 0.1);
-        bleftDrive.setPower(bleftPower);
-        brightDrive.setPower(brightPower);
-        fleftDrive.setPower(fleftPower);
-        frightDrive.setPower(frightPower);
+
+        robot.driveAndStrafe(gamepad1);
+        robot.driveAndStrafeSlow(gamepad1);
         setPositionsSynced(leftPos);
 
 

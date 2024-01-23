@@ -21,14 +21,23 @@ public class DrivingLogic {
     DcMotor frightDrive;
 
 
-
+    public DrivingLogic() {}
     public DrivingLogic(HardwareMap hwMap, Gamepad gamepad1){
         this.hwMap = hwMap;
         this.gamepad1 = gamepad1;
+
+
+    }
+    public void driveMotorInit(DcMotor frightDrive, DcMotor fleftDrive, DcMotor bleftDrive, DcMotor brightDrive){
+        //method must be used after motors are initialized in main code
+        this.frightDrive = frightDrive;
+        this.fleftDrive = fleftDrive;
+        this.bleftDrive = bleftDrive;
+        this.brightDrive = brightDrive;
     }
 
 
-    private void driveAndStrafe( ){
+    public void driveAndStrafe(Gamepad gamepad1){
         drive1 = -gamepad1.left_stick_y;
         turn = gamepad1.right_stick_x;
         strafe = -gamepad1.left_stick_x;
@@ -43,5 +52,22 @@ public class DrivingLogic {
         fleftDrive.setPower(fleftPower);
         frightDrive.setPower(frightPower);
 
+    }
+    public void driveAndStrafeSlow(Gamepad gamepad1) {
+        if (gamepad1.left_trigger > .1) {
+            drive1 = -gamepad1.left_stick_y;
+            turn = gamepad1.right_stick_x;
+            strafe = -gamepad1.left_stick_x;
+
+            bleftPower = Range.clip(drive1 - strafe - turn, -.00000000005, .00000000005);
+            brightPower = Range.clip(drive1 + strafe + turn, -.00000000005, .00000000005);
+            fleftPower = Range.clip(drive1 - strafe + turn, -.00000000005, .00000000005);
+            frightPower = Range.clip(drive1 + strafe - turn, -.00000000005, .00000000005);
+
+            bleftDrive.setPower(bleftPower);
+            brightDrive.setPower(brightPower);
+            fleftDrive.setPower(fleftPower);
+            frightDrive.setPower(frightPower);
+        }
     }
 }

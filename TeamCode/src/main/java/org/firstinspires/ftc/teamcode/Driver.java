@@ -61,6 +61,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
             scoringservoRight = hardwareMap.get(Servo.class, "scoringRight");
             hangLeft = hardwareMap.get(DcMotor.class, "hang_Left");
             hangRight = hardwareMap.get(DcMotor.class, "hang_Right");
+            robot.driveMotorInit(frightDrive, fleftDrive,bleftDrive,brightDrive);
 
 
             // Most robots need the motor on one side to be reversed to drive forward
@@ -98,17 +99,17 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
             while (opModeIsActive()) {
                 // POV Mode uses left stick to go forward, and right stick to turn.
                 // - This uses basic math to combine motions and is easier to drive straight.
-                double drive1 = -gamepad1.left_stick_y;
-                double turn = gamepad1.right_stick_x;
-                double strafe = -gamepad1.left_stick_x;
+//                double drive1 = -gamepad1.left_stick_y;
+//                double turn = gamepad1.right_stick_x;
+//                double strafe = -gamepad1.left_stick_x;
                 double intake1 = gamepad2.left_stick_x;
                 double scoring = gamepad2.right_stick_y;
+
                 servoProfile.initServos(axonLeft, axonRight);
 
-                bleftPower = Range.clip(drive1 - strafe - turn, -1, 1);
-                brightPower = Range.clip(drive1 + strafe + turn, -1, 1);
-                fleftPower = Range.clip(drive1 - strafe + turn, -1, 1);
-                frightPower = Range.clip(drive1 + strafe - turn, -1, 1);
+                robot.driveAndStrafe(gamepad1);
+                robot.driveAndStrafeSlow(gamepad1);
+
                 intakePower = Range.clip(intake1, -.45, .45);
                 scoringleftPower = Range.clip(scoring, -0.65, 0.1);
                 scoringrightPower = Range.clip(scoring, -0.65, 0.1);
@@ -141,6 +142,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     hangLeft.setPower(.7);
                     hangRight.setPower(.7);
+
                 }
 
                 if (gamepad2.dpad_up) {
@@ -150,8 +152,8 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     runtime.reset();
                     servoProfile.generateProfile(.34, .23, .21, .8);
                      while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive()) {
-                         servoProfile.setServoPath(bleftPower, brightPower, fleftPower, frightPower, intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                                 ,fleftDrive, frightDrive, drive1, strafe, turn, intake1, scoring, gamepad1, gamepad2);
+                         servoProfile.setServoPath( intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+                                 ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
 
                      }
 
@@ -174,8 +176,8 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                      servoProfile.generateProfile(.34, .23, .8, .21);
 //                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .29999 &&opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .20999 &&opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
-                         servoProfile.setServoPath(bleftPower, brightPower, fleftPower, frightPower, intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                         ,fleftDrive, frightDrive, drive1, strafe, turn, intake1, scoring, gamepad1, gamepad2);
+                         servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+                         ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
 
                     }
                      armAngle.setPosition(.0);
@@ -256,17 +258,13 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 
 
                 // Send calculated power to wheels
-                bleftDrive.setPower(bleftPower);
-                brightDrive.setPower(brightPower);
-                fleftDrive.setPower(fleftPower);
-                frightDrive.setPower(frightPower);
                 intake.setPower(intakePower);
                 scoringRight.setPower(scoringrightPower);
                 scoringLeft.setPower(scoringleftPower);
 
                 // Show the elapsed game time and wheel power.
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
-                telemetry.addData("Motors", "bleftDrive (%100f), brightDrive (%100f)", bleftPower, brightPower);
+                //telemetry.addData("Motors", "bleftDrive (%100f), brightDrive (%100f)", bleftPower, brightPower);
                 telemetry.addData("Set Position Left: ", hangLeft.getCurrentPosition());
                 telemetry.addData("Set Position Right: ", hangRight.getCurrentPosition());
                 telemetry.update();

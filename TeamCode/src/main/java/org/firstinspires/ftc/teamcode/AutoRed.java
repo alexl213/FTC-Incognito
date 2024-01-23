@@ -91,9 +91,13 @@ public class AutoRed extends LinearOpMode {
                     .forward(-28)
                     .build();
 
-            Trajectory traj2 = drive.trajectoryBuilder(new Pose2d())
+                Trajectory traj2 = drive.trajectoryBuilder(new Pose2d())
                     .forward(-22)
                     .build();
+
+                Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
+                        .splineTo(new Vector2d(-22, 30), Math.toRadians(45))
+                        .build();
 
 
 
@@ -189,17 +193,26 @@ public class AutoRed extends LinearOpMode {
                 sleep(500);
                 scoringservoLeft.setPosition(.3);
 
-                bleftDrive.setPower(-0.15);
-                brightDrive.setPower(-0.15);
-                fleftDrive.setPower(-0.15);
-                frightDrive.setPower(-0.15);
-                sleep(1250);
+//                bleftDrive.setPower(-0.15);
+//                brightDrive.setPower(-0.15);
+//                fleftDrive.setPower(-0.15);
+//                frightDrive.setPower(-0.15);
+//                sleep(1250);
+//
+//                bleftDrive.setPower(0);
+//                brightDrive.setPower(0);
+//                fleftDrive.setPower(0);
+//                frightDrive.setPower(0);
+//                sleep(10000000);
 
-                bleftDrive.setPower(0);
-                brightDrive.setPower(0);
-                fleftDrive.setPower(0);
-                frightDrive.setPower(0);
-                sleep(10000000);
+                drive.followTrajectory(traj3);
+                servoProfile.generateProfile(.34, .23, .21, .8);
+//                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive()) {
+//                    servoProfile.setServoPath( intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+//                            ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
+
+                }
+
             }
             // The OpenCV pipeline automatically processes frames and handles detection
         }

@@ -54,15 +54,15 @@ public class DrivingLogic {
 
     }
     public void driveAndStrafeSlow(Gamepad gamepad1) {
-        if (gamepad1.left_trigger > .1) {
+        while (gamepad1.left_trigger > .1) {
             drive1 = -gamepad1.left_stick_y;
             turn = gamepad1.right_stick_x;
             strafe = -gamepad1.left_stick_x;
 
-            bleftPower = Range.clip(drive1 - strafe - turn, -.00000000005, .00000000005);
-            brightPower = Range.clip(drive1 + strafe + turn, -.00000000005, .00000000005);
-            fleftPower = Range.clip(drive1 - strafe + turn, -.00000000005, .00000000005);
-            frightPower = Range.clip(drive1 + strafe - turn, -.00000000005, .00000000005);
+            bleftPower = Range.clip(drive1 - strafe - turn, -.2, .2);
+            brightPower = Range.clip(drive1 + strafe + turn, -.2, .2);
+            fleftPower = Range.clip(drive1 - strafe + turn, -.2, .2);
+            frightPower = Range.clip(drive1 + strafe - turn, -.2, .2);
 
             bleftDrive.setPower(bleftPower);
             brightDrive.setPower(brightPower);

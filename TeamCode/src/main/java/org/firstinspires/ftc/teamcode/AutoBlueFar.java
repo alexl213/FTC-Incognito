@@ -6,6 +6,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -15,12 +16,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
@@ -32,9 +35,9 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "AutoBlue")
+@Autonomous(name = "AutoBlueFar")
 
-public class AutoBlue extends LinearOpMode {
+public class AutoBlueFar extends LinearOpMode {
 
     private Servo scoringservoLeft = null;
     private Servo scoringservoRight = null;
@@ -42,12 +45,21 @@ public class AutoBlue extends LinearOpMode {
     double cY = 0;
     double width = 0;
     public ServoProfile servoProfile = new ServoProfile();
-    private Servo axonRight = null;
-    private Servo axonLeft = null;
+    public DrivingLogic robot = new DrivingLogic(hardwareMap, gamepad1);
+    private ElapsedTime runtime = new ElapsedTime();
     private DcMotor bleftDrive = null;
     private DcMotor brightDrive = null;
     private DcMotor fleftDrive = null;
     private DcMotor frightDrive = null;
+    private CRServo intake = null;
+    private DcMotor scoringLeft = null;
+    private DcMotor scoringRight = null;
+    private CRServo intakeDrop = null;
+    private Servo axonLeft = null;
+    private Servo axonRight = null;
+    private Servo armAngle = null;
+    private DcMotor hangLeft = null;
+    private DcMotor hangRight = null;
 
     private OpenCvCamera controlHubCam;  // Use OpenCvCamera class from FTC SDK
     private static final int CAMERA_WIDTH = 1920; // width  of wanted camera resolution
@@ -60,18 +72,29 @@ public class AutoBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        scoringservoLeft = hardwareMap.get(Servo.class, "scoringLeft");
-        scoringservoRight = hardwareMap.get(Servo.class, "scoringRight");
+
         bleftDrive = hardwareMap.get(DcMotor.class, "bleft_Drive");
         brightDrive = hardwareMap.get(DcMotor.class, "bright_Drive");
         fleftDrive = hardwareMap.get(DcMotor.class, "fleft_Drive");
         frightDrive = hardwareMap.get(DcMotor.class, "fright_Drive");
+        intake = hardwareMap.get(CRServo.class, "intake");
+        scoringLeft = hardwareMap.get(DcMotor.class, "scoring_Left");
+        scoringRight = hardwareMap.get(DcMotor.class, "scoring_Right");
+        intakeDrop = hardwareMap.get(CRServo.class, "intakeDrop");
+        axonLeft = hardwareMap.get(Servo.class, "axonLeft");
+        axonRight = hardwareMap.get(Servo.class, "axonRight");
+        armAngle = hardwareMap.get(Servo.class, "armAngle");
+        scoringservoLeft = hardwareMap.get(Servo.class, "scoringLeft");
+        scoringservoRight = hardwareMap.get(Servo.class, "scoringRight");
+        hangLeft = hardwareMap.get(DcMotor.class, "hang_Left");
+        hangRight = hardwareMap.get(DcMotor.class, "hang_Right");
+        robot.driveMotorInit(frightDrive, fleftDrive,bleftDrive,brightDrive);
 
-        initOpenCV();
+
         FtcDashboard dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
         FtcDashboard.getInstance().startCameraStream(controlHubCam, 30);
-
+        initOpenCV();
 
         waitForStart();
 
@@ -81,19 +104,64 @@ public class AutoBlue extends LinearOpMode {
 //            telemetry.update();
 
             SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+            double intakePower;
+            double scoringleftPower;
+            double scoringrightPower;
+            double intake1 = gamepad2.left_stick_x;
+            double scoring = gamepad2.right_stick_y;
+            intakePower = com.qualcomm.robotcore.util.Range.clip(intake1, -.45, .45);
+            scoringleftPower = com.qualcomm.robotcore.util.Range.clip(scoring, -0.65, 0.1);
+            scoringrightPower = Range.clip(scoring, -0.65, 0.1);
 
-            Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
+            Pose2d startPose = new Pose2d(-36.0, 63, Math.toRadians(90));
 
             drive.setPoseEstimate(startPose);
 
-            Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
-                    .forward(-28)
+        Trajectory farright1 = drive.trajectoryBuilder(startPose)
+                .forward(-21.0)
+                .splineTo(new Vector2d(-40.0,36.0), Math.toRadians(0.0))
+                .build();
+        Trajectory farright2 = drive.trajectoryBuilder(farright1.end())
+                .forward(-30.0)
+                .splineTo(new Vector2d(52.0, 29.0), Math.toRadians(0.0))
+                .build();
+        Trajectory farright3 = drive.trajectoryBuilder(farright2.end())
+                .strafeRight(30.0)
+                .build();
+        Trajectory farleft1 = drive.trajectoryBuilder(startPose)
+            .forward(-20.0)
+            .splineTo(new Vector2d(-32.0,36.0), Math.toRadians(180.0))
+            .build();
+        Trajectory farleft2 = drive.trajectoryBuilder(farleft1.end())
+            .forward(-3.0)
+            .build();
+        Trajectory farleft3 = drive.trajectoryBuilder(farleft2.end())
+            .strafeRight(12.0)
+            .splineTo(new Vector2d(30.0, 15.0), Math.toRadians(0.0))
+            .splineTo(new Vector2d(40.0, 42.0), Math.toRadians(90.0))
+            .build();
+        Trajectory farleft4 = drive.trajectoryBuilder(farleft3.end())
+            .forward(-12.0)
+            .build();
+        Trajectory farleft5 = drive.trajectoryBuilder(farleft4.end())
+                .strafeRight(22.0)
+                .build();
+        Trajectory farforward1 = drive.trajectoryBuilder(startPose)
+            .forward(-5.0)
+            .splineTo(new Vector2d(-40.0, 50.0), Math.toRadians(-90.0))
+            .splineTo(new Vector2d(-36.0,33.0), Math.toRadians(90.0))
+            .build();
+            Trajectory farforward2 = drive.trajectoryBuilder(farforward1.end())
+                    .forward(-3.0)
+                    .splineTo(new Vector2d(-25.0, 36.0), Math.toRadians(0.0))
+                    .splineTo(new Vector2d(40.0, 36.0), Math.toRadians(0.0))
                     .build();
-
-            Trajectory traj2 = drive.trajectoryBuilder(new Pose2d())
-                    .forward(-22)
+            Trajectory farforward3 = drive.trajectoryBuilder(farforward2.end())
+                    .forward(-12.0)
                     .build();
-
+            Trajectory farforward4 = drive.trajectoryBuilder(farforward3.end())
+                    .strafeRight(26.0)
+                    .build();
 
 
             if (opModeIsActive() && cX > 1450) {
@@ -107,31 +175,37 @@ public class AutoBlue extends LinearOpMode {
                 armAngle.setPosition(.36);
                 sleep(500);
                 controlHubCam.stopStreaming();
-                drive.followTrajectory(traj2);
-                drive.turn(Math.toRadians(122));
-
-                bleftDrive.setPower(0.15);
-                brightDrive.setPower(0.15);
-                fleftDrive.setPower(0.15);
-                frightDrive.setPower(0.15);
-                sleep(400);
-
-                armAngle.setPosition(0);
-                sleep(500);
-                scoringservoLeft.setPosition(.3);
+                drive.followTrajectory(farright1);
+                armAngle.setPosition(.0);
                 sleep(300);
+                scoringservoLeft.setPosition(.32);
+                sleep(300);
+                scoringservoLeft.setPosition(.05);
+                scoringservoRight.setPosition(.32);
+                armAngle.setPosition(.36);
+                sleep(4000);
+                drive.followTrajectory(farright2);
+                runtime.reset();
+                servoProfile.generateProfile(.34, .23, .21, .8);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+                            , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
+                }
+                scoringservoRight.setPosition(.05);
+                sleep(300);
+                scoringservoLeft.setPosition(.05);
+                scoringservoRight.setPosition(.32);
+                sleep(500);
+                runtime.reset();
+                servoProfile.generateProfile(.34, .23, .8, .21);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+                            ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
+                }
+                sleep(500);
+                drive.followTrajectory(farright3);
+                sleep(100000000);
 
-                bleftDrive.setPower(-0.15);
-                brightDrive.setPower(-0.15);
-                fleftDrive.setPower(-0.15);
-                frightDrive.setPower(-0.15);
-                sleep(1250);
-
-                bleftDrive.setPower(0);
-                brightDrive.setPower(0);
-                fleftDrive.setPower(0);
-                frightDrive.setPower(0);
-                sleep(10000000);
             }
             if (opModeIsActive() && cX < 400) {
                 telemetry.addData("Location: ", "Left");
@@ -144,32 +218,39 @@ public class AutoBlue extends LinearOpMode {
                 armAngle.setPosition(.36);
                 sleep(500);
                 controlHubCam.stopStreaming();
-                drive.followTrajectory(traj2);
-                drive.turn(Math.toRadians(-122));
-
-                bleftDrive.setPower(0.15);
-                brightDrive.setPower(0.15);
-                fleftDrive.setPower(0.15);
-                frightDrive.setPower(0.15);
-                sleep(400);
-
-                armAngle.setPosition(0);
-                sleep(500);
-                scoringservoLeft.setPosition(.3);
+                drive.followTrajectory(farleft1);
+                armAngle.setPosition(.0);
                 sleep(300);
+                scoringservoLeft.setPosition(.32);
+                sleep(300);
+                scoringservoLeft.setPosition(.05);
+                scoringservoRight.setPosition(.32);
+                armAngle.setPosition(.36);
+                sleep(4000);
+                drive.followTrajectory(farleft2);
+                drive.followTrajectory(farleft3);
+                drive.followTrajectory(farleft4);
+                runtime.reset();
+                servoProfile.generateProfile(.34, .23, .21, .8);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+                            , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
+                }
+                scoringservoRight.setPosition(.05);
+                sleep(300);
+                scoringservoLeft.setPosition(.05);
+                scoringservoRight.setPosition(.32);
+                sleep(500);
+                runtime.reset();
+                servoProfile.generateProfile(.34, .23, .8, .21);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+                            ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
+                }
+                sleep(500);
+                drive.followTrajectory(farleft5);
+                sleep(100000000);
 
-                bleftDrive.setPower(-0.15);
-
-                brightDrive.setPower(-0.15);
-                fleftDrive.setPower(-0.15);
-                frightDrive.setPower(-0.15);
-                sleep(1250);
-
-                bleftDrive.setPower(0);
-                brightDrive.setPower(0);
-                fleftDrive.setPower(0);
-                frightDrive.setPower(0);
-                sleep(10000000);
             }
             if (opModeIsActive() && cX < 1450 && cX > 400) {
                 telemetry.addData("Location: ", "Center");
@@ -182,24 +263,38 @@ public class AutoBlue extends LinearOpMode {
                 armAngle.setPosition(.36);
                 sleep(500);
                 controlHubCam.stopStreaming();
-                drive.followTrajectory(traj1);
-                drive.turn(Math.toRadians(180));
-
-                armAngle.setPosition(0);
+                drive.followTrajectory(farforward1);
+                armAngle.setPosition(.0);
+                sleep(300);
+                scoringservoLeft.setPosition(.32);
+                sleep(300);
+                scoringservoLeft.setPosition(.05);
+                scoringservoRight.setPosition(.32);
+                armAngle.setPosition(.36);
+                sleep(4000);
+                drive.followTrajectory(farforward2);
+                drive.followTrajectory(farforward3);
+                runtime.reset();
+                servoProfile.generateProfile(.34, .23, .21, .8);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+                            , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
+                }
+                scoringservoRight.setPosition(.05);
+                sleep(300);
+                scoringservoLeft.setPosition(.05);
+                scoringservoRight.setPosition(.32);
                 sleep(500);
-                scoringservoLeft.setPosition(.3);
+                runtime.reset();
+                servoProfile.generateProfile(.34, .23, .8, .21);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+                            ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
+                }
+                sleep(500);
+                drive.followTrajectory(farforward4);
+                sleep(100000000);
 
-                bleftDrive.setPower(-0.15);
-                brightDrive.setPower(-0.15);
-                fleftDrive.setPower(-0.15);
-                frightDrive.setPower(-0.15);
-                sleep(1250);
-
-                bleftDrive.setPower(0);
-                brightDrive.setPower(0);
-                fleftDrive.setPower(0);
-                frightDrive.setPower(0);
-                sleep(10000000);
             }
             // The OpenCV pipeline automatically processes frames and handles detection
         }

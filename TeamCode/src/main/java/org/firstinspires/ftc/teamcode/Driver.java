@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 
@@ -34,7 +35,8 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
         private DcMotor hangRight = null;
 
         public ServoProfile servoProfile = new ServoProfile();
-        public DrivingLogic robot = new DrivingLogic(hardwareMap, gamepad1);
+    public DrivingLogic robot = new DrivingLogic(hardwareMap, gamepad1);
+
 
 
 
@@ -125,6 +127,9 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     scoringservoRight.setPosition(.3);
                     armAngle.setPosition(.38);
                 }
+//                if (gamepad2.right_stick_y > .2 && (scoringRight.getCurrentPosition() < 1 && scoringLeft.getCurrentPosition() < 0){
+//
+//                }
 
                 if (gamepad2.y){ //hanging position going up to grab on to pole
                     hangLeft.setTargetPosition(-1855);
@@ -174,7 +179,6 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     scoringservoRight.setPosition(.3);
                      runtime.reset();
                      servoProfile.generateProfile(.34, .23, .8, .21);
-//                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .29999 &&opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .20999 &&opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                          servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                          ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
@@ -265,8 +269,10 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                 // Show the elapsed game time and wheel power.
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
                 //telemetry.addData("Motors", "bleftDrive (%100f), brightDrive (%100f)", bleftPower, brightPower);
-                telemetry.addData("Set Position Left: ", hangLeft.getCurrentPosition());
-                telemetry.addData("Set Position Right: ", hangRight.getCurrentPosition());
+//                telemetry.addData("Set Position Left: ", hangLeft.getCurrentPosition());
+//                telemetry.addData("Set Position Right: ", hangRight.getCurrentPosition());
+                telemetry.addData("Set Position Left: ", scoringLeft.getCurrentPosition());//20
+                telemetry.addData("Set Position Right: ", scoringRight.getCurrentPosition());//negative
                 telemetry.update();
             }
         }

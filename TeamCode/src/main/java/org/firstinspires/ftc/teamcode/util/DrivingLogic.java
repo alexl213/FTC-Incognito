@@ -57,19 +57,11 @@ public class DrivingLogic {
 
     }
 
-    public void driveAndStrafeSlow(Gamepad gamepad1, Gamepad gamepad2, DcMotor scoringLeft, DcMotor scoringRight, double Kg) {
+    public void driveAndStrafeSlow(Gamepad gamepad1) {
         while (gamepad1.left_trigger > .1) {
             drive1 = -gamepad1.left_stick_y;
             turn = gamepad1.right_stick_x;
             strafe = -gamepad1.left_stick_x;
-            double scoring = Math.copySign(Math.pow(gamepad2.right_stick_y, 2), gamepad2.right_stick_y);
-
-            if (scoringRight.getCurrentPosition() < -20 || scoringLeft.getCurrentPosition() < -20) {//less than -20
-                scoringRight.setPower(Range.clip(scoring, -.35, .12) + Kg);
-                scoringLeft.setPower(Range.clip(scoring, -.35, .12) + Kg);
-            } else {
-                scoringRight.setPower(Range.clip(scoring, -.35, 0));
-                scoringLeft.setPower(Range.clip(scoring, -.35, 0));
 
                 bleftPower = Range.clip(drive1 - strafe - turn, -.2, .2);
                 brightPower = Range.clip(drive1 + strafe + turn, -.2, .2);
@@ -82,5 +74,16 @@ public class DrivingLogic {
                 frightDrive.setPower(frightPower);
             }
         }
+        public void liftOperations(Gamepad gamepad2, DcMotor scoringLeft, DcMotor scoringRight, double Kg){
+
+        double scoring = Math.copySign(Math.pow(gamepad2.right_stick_y, 2), gamepad2.right_stick_y);
+
+            if (scoringRight.getCurrentPosition() < -20 || scoringLeft.getCurrentPosition() < -20) {//less than -20
+                scoringRight.setPower(Range.clip(scoring, -.35, .12) + Kg);
+                scoringLeft.setPower(Range.clip(scoring, -.35, .12) + Kg);
+            } else {
+                scoringRight.setPower(Range.clip(scoring, -.35, 0));
+                scoringLeft.setPower(Range.clip(scoring, -.35, 0));
     }
+}
 }

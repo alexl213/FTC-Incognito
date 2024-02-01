@@ -118,7 +118,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                 servoProfile.initServos(axonLeft, axonRight);
 
                 robot.driveAndStrafe(gamepad1);
-                robot.driveAndStrafeSlow(gamepad1, gamepad2, scoringLeft, scoringRight, Kg);
+                robot.driveAndStrafeSlow(gamepad1);
 
                 intakePower = Range.clip(intake1, -.45, .45);
                 scoringleftPower = Range.clip(scoring, -0.65, 0.1);
@@ -186,8 +186,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     runtime.reset();
                     servoProfile.generateProfile(.34, .23, .21, .8);
                      while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive()) {
-                         servoProfile.setServoPath( intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                                 ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
+                         servoProfile.setServoPathTele(scoring, robot, gamepad2, gamepad1, scoringLeft, scoringRight, Kg);
 
                      }
 
@@ -208,9 +207,8 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     scoringservoRight.setPosition(.3);
                      runtime.reset();
                      servoProfile.generateProfile(.34, .23, .8, .21);
-                    while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .20999 &&opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
-                         servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                         ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
+                    while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .20999 && opModeIsActive() || runtime.seconds() < 3) {
+                        servoProfile.setServoPathTele(scoring, robot, gamepad2, gamepad1, scoringLeft, scoringRight, Kg);
 
                     }
                      armAngle.setPosition(.0);

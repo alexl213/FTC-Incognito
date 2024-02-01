@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.message.redux.ReceiveGamepadState;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
@@ -22,12 +21,17 @@ public class ServoProfile{
 
 
     double leftPos;
-
-
-
+    public void setServoPathTele(double scoring, DrivingLogic robot, Gamepad gamepad2, Gamepad gamepad1, DcMotor scoringLeft, DcMotor scoringRight, double Kg){
+        leftPos = servoProfile1.get(timer.seconds()).getX();
+        scoring = gamepad2.right_stick_y;
+        robot.driveAndStrafe(gamepad1);
+        robot.liftOperations(gamepad2, scoringLeft, scoringRight, Kg);
+        setPositionsSynced(leftPos);
+    }
 
     public void setServoPath( double intakePower, double scoringleftPower,
-                             double scoringrightPower, DcMotor bleftDrive, DcMotor brightDrive, DcMotor fleftDrive, DcMotor frightDrive, double intake1, double scoring, Gamepad gamepad1, Gamepad gamepad2, DrivingLogic robot){
+                             double scoringrightPower, DcMotor bleftDrive, DcMotor brightDrive, DcMotor fleftDrive,
+                              DcMotor frightDrive, double intake1, double scoring, Gamepad gamepad1, Gamepad gamepad2, DrivingLogic robot){
 
         leftPos = servoProfile1.get(timer.seconds()).getX();
 

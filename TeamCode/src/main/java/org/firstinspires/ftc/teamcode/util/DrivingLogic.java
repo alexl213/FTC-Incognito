@@ -62,7 +62,7 @@ public class DrivingLogic {
             drive1 = -gamepad1.left_stick_y;
             turn = gamepad1.right_stick_x;
             strafe = -gamepad1.left_stick_x;
-            double scoring = gamepad2.right_stick_y;
+            double scoring = Math.copySign(Math.pow(gamepad2.right_stick_y, 2), gamepad2.right_stick_y);
 
             if (scoringRight.getCurrentPosition() < -20 || scoringLeft.getCurrentPosition() < -20) {//less than -20
                 scoringRight.setPower(Range.clip(scoring, -.35, .12) + Kg);

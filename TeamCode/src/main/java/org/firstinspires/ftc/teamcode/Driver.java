@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -10,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.DrivingLogic;
@@ -19,7 +17,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 @TeleOp(name="Robott", group="Linear Opmode")
 
     public class Driver extends LinearOpMode{
-        public static double Kg = -0.12;
+        public static double Kg = -0.125; //-0.12
         // Declare OpMode members.
         private ElapsedTime runtime = new ElapsedTime();
         private DcMotor bleftDrive = null;
@@ -113,9 +111,9 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 //                double drive1 = -gamepad1.left_stick_y;
 //                double turn = gamepad1.right_stick_x;
 //                double strafe = -gamepad1.left_stick_x;
-                double previousposition = scoringLeft.getCurrentPosition();
+                //double previousposition = scoringLeft.getCurrentPosition();
                 double intake1 = gamepad2.left_stick_x;
-                double scoring = gamepad2.right_stick_y;
+                double scoring = Math.copySign(Math.pow(gamepad2.right_stick_y, 2), gamepad2.right_stick_y);
 
                 servoProfile.initServos(axonLeft, axonRight);
 

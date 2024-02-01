@@ -159,7 +159,7 @@ public class AutoBlueFarPark extends LinearOpMode {
             .build();
         Trajectory farforward3 = drive.trajectoryBuilder(farforward2.end())
             .strafeRight(35.0)
-                .splineTo(new Vector2d(40.0, 34.0), Math.toRadians(90.0))
+                .splineTo(new Vector2d(40.0, 38.0), Math.toRadians(90.0))
             .build();
         Trajectory farforward4 = drive.trajectoryBuilder(farforward3.end())
                 .forward(-12.0)

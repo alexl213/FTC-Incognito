@@ -139,7 +139,7 @@ public class AutoBlueClose extends LinearOpMode {
             Trajectory closeleft3 = drive.trajectoryBuilder(closeleft2.end())
                     .strafeRight(5.0)
                     .splineTo(new Vector2d(30.0, 22.0), Math.toRadians(0.0))
-                    .splineTo(new Vector2d(40.0, 42.0), Math.toRadians(90.0))
+                    .splineTo(new Vector2d(40.0, 41.0), Math.toRadians(90.0))
                     .build();
             Trajectory closeleft4 = drive.trajectoryBuilder(closeleft3.end())
                     .forward(-12.0)

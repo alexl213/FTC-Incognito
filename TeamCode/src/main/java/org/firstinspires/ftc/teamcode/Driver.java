@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -9,13 +12,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 
-
+@Config
 @TeleOp(name="Robott", group="Linear Opmode")
 
     public class Driver extends LinearOpMode{
-
+        public static double Kg = -0.12;
         // Declare OpMode members.
         private ElapsedTime runtime = new ElapsedTime();
         private DcMotor bleftDrive = null;
@@ -34,9 +38,10 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
         private DcMotor hangLeft = null;
         private DcMotor hangRight = null;
 
-        public ServoProfile servoProfile = new ServoProfile();
-    public DrivingLogic robot = new DrivingLogic(hardwareMap, gamepad1);
-
+        private ServoProfile servoProfile = new ServoProfile();
+        private DrivingLogic robot = new DrivingLogic(hardwareMap, gamepad1);
+        private FtcDashboard dashboard = FtcDashboard.getInstance();
+        private Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
 
 
@@ -79,6 +84,9 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
             hangRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //537.6 motor ticks per revolution
             hangLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //537.6 motor ticks per revolution
 
+            scoringLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            scoringRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double bleftPower;
@@ -98,19 +106,21 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
             waitForStart();
             runtime.reset();
 
+
             while (opModeIsActive()) {
                 // POV Mode uses left stick to go forward, and right stick to turn.
                 // - This uses basic math to combine motions and is easier to drive straight.
 //                double drive1 = -gamepad1.left_stick_y;
 //                double turn = gamepad1.right_stick_x;
 //                double strafe = -gamepad1.left_stick_x;
+                double previousposition = scoringLeft.getCurrentPosition();
                 double intake1 = gamepad2.left_stick_x;
                 double scoring = gamepad2.right_stick_y;
 
                 servoProfile.initServos(axonLeft, axonRight);
 
                 robot.driveAndStrafe(gamepad1);
-                robot.driveAndStrafeSlow(gamepad1);
+                robot.driveAndStrafeSlow(gamepad1, gamepad2, scoringLeft, scoringRight, Kg);
 
                 intakePower = Range.clip(intake1, -.45, .45);
                 scoringleftPower = Range.clip(scoring, -0.65, 0.1);
@@ -127,9 +137,30 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     scoringservoRight.setPosition(.3);
                     armAngle.setPosition(.38);
                 }
-//                if (gamepad2.right_stick_y > .2 && (scoringRight.getCurrentPosition() < 1 && scoringLeft.getCurrentPosition() < 0){
-//
+
+
+//                if (scoringRight.getCurrentPosition() < -3 && scoringLeft.getCurrentPosition() < -1){
+//                    scoringRight.setPower(Range.clip(scoring, -.3, 0));
+//                    scoringLeft.setPower(Range.clip(scoring, -.3, 0));
 //                }
+//                else if(scoringRight.getCurrentPosition() < -398 && scoringLeft.getCurrentPosition() < -402){
+//                    scoringRight.setPower(Range.clip(scoring, 0, .1));
+//                    scoringLeft.setPower(Range.clip(scoring, 0, .1));
+//                }
+//                else
+                //{
+                if(scoringRight.getCurrentPosition() < -20 || scoringLeft.getCurrentPosition() < -20 ){//less than -20
+                    scoringRight.setPower(Range.clip(scoring, -.35,.12) + Kg);
+                    scoringLeft.setPower(Range.clip(scoring, -.35,.12) + Kg);
+            }
+                else{
+                    scoringRight.setPower(Range.clip(scoring, -.35,0));
+                    scoringLeft.setPower(Range.clip(scoring, -.35,0));
+                }
+                //}
+//                double diff = scoringLeft.getCurrentPosition() - previousposition;
+//                dashboardTelemetry.addData("diff", diff);
+//                dashboardTelemetry.update();
 
                 if (gamepad2.y){ //hanging position going up to grab on to pole
                     hangLeft.setTargetPosition(-1855);
@@ -263,8 +294,8 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 
                 // Send calculated power to wheels
                 intake.setPower(intakePower);
-                scoringRight.setPower(scoringrightPower);
-                scoringLeft.setPower(scoringleftPower);
+//                scoringRight.setPower(scoringrightPower);
+//                scoringLeft.setPower(scoringleftPower);
 
                 // Show the elapsed game time and wheel power.
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -274,6 +305,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                 telemetry.addData("Set Position Left: ", scoringLeft.getCurrentPosition());//20
                 telemetry.addData("Set Position Right: ", scoringRight.getCurrentPosition());//negative
                 telemetry.update();
+
             }
         }
     }

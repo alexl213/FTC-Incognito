@@ -122,11 +122,13 @@ public class AutoBlueFar extends LinearOpMode {
                 .splineTo(new Vector2d(-40.0,36.0), Math.toRadians(0.0))
                 .build();
         Trajectory farright2 = drive.trajectoryBuilder(farright1.end())
-                .forward(-30.0)
-                .splineTo(new Vector2d(52.0, 29.0), Math.toRadians(0.0))
+                .forward(-3.0)
                 .build();
         Trajectory farright3 = drive.trajectoryBuilder(farright2.end())
-                .strafeRight(30.0)
+                .strafeLeft(8.0)
+                .splineTo(new Vector2d(-20.0, 12.0), Math.toRadians(0.0))
+                .strafeLeft(30.0)
+                .splineTo(new Vector2d(40.0, 30.5), Math.toRadians(-90.0))
                 .build();
         Trajectory farleft1 = drive.trajectoryBuilder(startPose)
             .forward(-20.0)
@@ -136,31 +138,24 @@ public class AutoBlueFar extends LinearOpMode {
             .forward(-3.0)
             .build();
         Trajectory farleft3 = drive.trajectoryBuilder(farleft2.end())
-            .strafeRight(12.0)
-            .splineTo(new Vector2d(30.0, 15.0), Math.toRadians(0.0))
-            .splineTo(new Vector2d(40.0, 42.0), Math.toRadians(90.0))
+            .strafeRight(8.0)
+            .splineTo(new Vector2d(40.0, 41.0), Math.toRadians(90.0))
             .build();
         Trajectory farleft4 = drive.trajectoryBuilder(farleft3.end())
             .forward(-12.0)
             .build();
-        Trajectory farleft5 = drive.trajectoryBuilder(farleft4.end())
-                .strafeRight(22.0)
-                .build();
         Trajectory farforward1 = drive.trajectoryBuilder(startPose)
-            .forward(-5.0)
-            .splineTo(new Vector2d(-40.0, 50.0), Math.toRadians(-90.0))
-            .splineTo(new Vector2d(-36.0,33.0), Math.toRadians(90.0))
+            .forward(-47.0)
             .build();
             Trajectory farforward2 = drive.trajectoryBuilder(farforward1.end())
-                    .forward(-3.0)
-                    .splineTo(new Vector2d(-25.0, 36.0), Math.toRadians(0.0))
-                    .splineTo(new Vector2d(40.0, 36.0), Math.toRadians(0.0))
+                    .forward(-4.0)
                     .build();
             Trajectory farforward3 = drive.trajectoryBuilder(farforward2.end())
-                    .forward(-12.0)
+                    .strafeRight(35.0)
+                    .splineTo(new Vector2d(40.0, 36.0), Math.toRadians(90.0))
                     .build();
             Trajectory farforward4 = drive.trajectoryBuilder(farforward3.end())
-                    .strafeRight(26.0)
+                    .forward(-12.0)
                     .build();
 
 
@@ -185,6 +180,7 @@ public class AutoBlueFar extends LinearOpMode {
                 armAngle.setPosition(.36);
                 sleep(4000);
                 drive.followTrajectory(farright2);
+                drive.followTrajectory(farright3);
                 runtime.reset();
                 servoProfile.generateProfile(.34, .23, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
@@ -202,8 +198,6 @@ public class AutoBlueFar extends LinearOpMode {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
-                sleep(500);
-                drive.followTrajectory(farright3);
                 sleep(100000000);
 
             }
@@ -247,8 +241,6 @@ public class AutoBlueFar extends LinearOpMode {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
-                sleep(500);
-                drive.followTrajectory(farleft5);
                 sleep(100000000);
 
             }
@@ -274,6 +266,7 @@ public class AutoBlueFar extends LinearOpMode {
                 sleep(4000);
                 drive.followTrajectory(farforward2);
                 drive.followTrajectory(farforward3);
+                drive.followTrajectory(farforward4);
                 runtime.reset();
                 servoProfile.generateProfile(.34, .23, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
@@ -291,8 +284,6 @@ public class AutoBlueFar extends LinearOpMode {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
-                sleep(500);
-                drive.followTrajectory(farforward4);
                 sleep(100000000);
 
             }

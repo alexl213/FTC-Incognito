@@ -21,14 +21,17 @@ public class DrivingLogic {
     DcMotor frightDrive;
 
 
-    public DrivingLogic() {}
-    public DrivingLogic(HardwareMap hwMap, Gamepad gamepad1){
+    public DrivingLogic() {
+    }
+
+    public DrivingLogic(HardwareMap hwMap, Gamepad gamepad1) {
         this.hwMap = hwMap;
         this.gamepad1 = gamepad1;
 
 
     }
-    public void driveMotorInit(DcMotor frightDrive, DcMotor fleftDrive, DcMotor bleftDrive, DcMotor brightDrive){
+
+    public void driveMotorInit(DcMotor frightDrive, DcMotor fleftDrive, DcMotor bleftDrive, DcMotor brightDrive) {
         //method must be used after motors are initialized in main code
         this.frightDrive = frightDrive;
         this.fleftDrive = fleftDrive;
@@ -37,7 +40,7 @@ public class DrivingLogic {
     }
 
 
-    public void driveAndStrafe(Gamepad gamepad1){
+    public void driveAndStrafe(Gamepad gamepad1) {
         drive1 = -gamepad1.left_stick_y;
         turn = gamepad1.right_stick_x;
         strafe = -gamepad1.left_stick_x;
@@ -53,21 +56,31 @@ public class DrivingLogic {
         frightDrive.setPower(frightPower);
 
     }
-    public void driveAndStrafeSlow(Gamepad gamepad1) {
+
+    public void driveAndStrafeSlow(Gamepad gamepad1, Gamepad gamepad2, DcMotor scoringLeft, DcMotor scoringRight, double Kg) {
         while (gamepad1.left_trigger > .1) {
             drive1 = -gamepad1.left_stick_y;
             turn = gamepad1.right_stick_x;
             strafe = -gamepad1.left_stick_x;
+            double scoring = gamepad2.right_stick_y;
 
-            bleftPower = Range.clip(drive1 - strafe - turn, -.2, .2);
-            brightPower = Range.clip(drive1 + strafe + turn, -.2, .2);
-            fleftPower = Range.clip(drive1 - strafe + turn, -.2, .2);
-            frightPower = Range.clip(drive1 + strafe - turn, -.2, .2);
+            if (scoringRight.getCurrentPosition() < -20 || scoringLeft.getCurrentPosition() < -20) {//less than -20
+                scoringRight.setPower(Range.clip(scoring, -.35, .12) + Kg);
+                scoringLeft.setPower(Range.clip(scoring, -.35, .12) + Kg);
+            } else {
+                scoringRight.setPower(Range.clip(scoring, -.35, 0));
+                scoringLeft.setPower(Range.clip(scoring, -.35, 0));
 
-            bleftDrive.setPower(bleftPower);
-            brightDrive.setPower(brightPower);
-            fleftDrive.setPower(fleftPower);
-            frightDrive.setPower(frightPower);
+                bleftPower = Range.clip(drive1 - strafe - turn, -.2, .2);
+                brightPower = Range.clip(drive1 + strafe + turn, -.2, .2);
+                fleftPower = Range.clip(drive1 - strafe + turn, -.2, .2);
+                frightPower = Range.clip(drive1 + strafe - turn, -.2, .2);
+
+                bleftDrive.setPower(bleftPower);
+                brightDrive.setPower(brightPower);
+                fleftDrive.setPower(fleftPower);
+                frightDrive.setPower(frightPower);
+            }
         }
     }
 }

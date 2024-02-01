@@ -31,14 +31,16 @@ public class ServoProfile{
 
         leftPos = servoProfile1.get(timer.seconds()).getX();
 
+
         intake1 = gamepad2.left_stick_x;
         scoring = gamepad2.right_stick_y;
         intakePower = Range.clip(intake1, -.45, .45);
         scoringleftPower = Range.clip(scoring, -0.65, 0.1);
         scoringrightPower = Range.clip(scoring, -0.65, 0.1);
 
+
         robot.driveAndStrafe(gamepad1);
-        robot.driveAndStrafeSlow(gamepad1);
+        //robot.driveAndStrafeSlow(gamepad1,gamepad2, );cannot drive slow while moving arm up or down
         setPositionsSynced(leftPos);
 
 

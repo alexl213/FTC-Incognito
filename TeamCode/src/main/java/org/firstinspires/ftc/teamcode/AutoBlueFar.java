@@ -119,7 +119,7 @@ public class AutoBlueFar extends LinearOpMode {
 
         Trajectory farright1 = drive.trajectoryBuilder(startPose)
                 .forward(-21.0)
-                .splineTo(new Vector2d(-40.0,36.0), Math.toRadians(0.0))
+                .splineTo(new Vector2d(-39.0,36.0), Math.toRadians(0.0))
                 .build();
         Trajectory farright2 = drive.trajectoryBuilder(farright1.end())
                 .forward(-3.0)
@@ -132,7 +132,7 @@ public class AutoBlueFar extends LinearOpMode {
                 .build();
         Trajectory farleft1 = drive.trajectoryBuilder(startPose)
             .forward(-20.0)
-            .splineTo(new Vector2d(-32.0,36.0), Math.toRadians(180.0))
+            .splineTo(new Vector2d(-33.0,36.0), Math.toRadians(180.0))
             .build();
         Trajectory farleft2 = drive.trajectoryBuilder(farleft1.end())
             .forward(-3.0)
@@ -152,7 +152,7 @@ public class AutoBlueFar extends LinearOpMode {
                     .build();
             Trajectory farforward3 = drive.trajectoryBuilder(farforward2.end())
                     .strafeRight(35.0)
-                    .splineTo(new Vector2d(40.0, 36.0), Math.toRadians(90.0))
+                    .splineTo(new Vector2d(40.0, 34.0), Math.toRadians(90.0))
                     .build();
             Trajectory farforward4 = drive.trajectoryBuilder(farforward3.end())
                     .forward(-12.0)

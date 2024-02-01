@@ -120,7 +120,7 @@ public class AutoRedClose extends LinearOpMode {
 
             Trajectory closeright1 = drive.trajectoryBuilder(startPose)
                     .forward(-20.0)
-                    .splineTo(new Vector2d(16.0,-36.0), Math.toRadians(180.0))
+                    .splineTo(new Vector2d(15.0,-36.0), Math.toRadians(180.0))
                     .build();
             Trajectory closeright2 = drive.trajectoryBuilder(closeright1.end())
                     .forward(-3.0)
@@ -128,7 +128,7 @@ public class AutoRedClose extends LinearOpMode {
             Trajectory closeright3 = drive.trajectoryBuilder(closeright2.end())
                     .strafeRight(5.0)
                     .splineTo(new Vector2d(30.0, -50.0), Math.toRadians(0.0))
-                    .splineTo(new Vector2d(40.0, -42.0), Math.toRadians(90.0))
+                    .splineTo(new Vector2d(40.0, -41.0), Math.toRadians(90.0))
                     .build();
             Trajectory closeright4 = drive.trajectoryBuilder(closeright3.end())
                     .forward(-12.0)
@@ -138,13 +138,16 @@ public class AutoRedClose extends LinearOpMode {
                     .build();
             Trajectory closeleft1 = drive.trajectoryBuilder(startPose)
                     .forward(-21.0)
-                    .splineTo(new Vector2d(8.0,-36.0), Math.toRadians(0.0))
+                    .splineTo(new Vector2d(9.0,-36.0), Math.toRadians(0.0))
                     .build();
             Trajectory closeleft2 = drive.trajectoryBuilder(closeleft1.end())
                     .forward(-10.0)
-                    .splineTo(new Vector2d(52.0, -29.0), Math.toRadians(0.0))
+                    .splineTo(new Vector2d(40.0, -30.5), Math.toRadians(0.0))
                     .build();
             Trajectory closeleft3 = drive.trajectoryBuilder(closeleft2.end())
+                    .forward(-12.0)
+                    .build();
+            Trajectory closeleft4 = drive.trajectoryBuilder(closeleft3.end())
                     .strafeLeft(30.0)
                     .build();
             Trajectory closeforward1 = drive.trajectoryBuilder(startPose)
@@ -229,6 +232,7 @@ public class AutoRedClose extends LinearOpMode {
                 armAngle.setPosition(.36);
                 sleep(200);
                 drive.followTrajectory(closeleft2);
+                drive.followTrajectory(closeleft3);
                 runtime.reset();
                 servoProfile.generateProfile(.34, .23, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
@@ -247,7 +251,7 @@ public class AutoRedClose extends LinearOpMode {
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
                 sleep(500);
-                drive.followTrajectory(closeleft3);
+                drive.followTrajectory(closeleft4);
                 sleep(100000000);
             }
             if (opModeIsActive() && cX < 1450 && cX > 400) {

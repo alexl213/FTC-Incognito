@@ -117,18 +117,21 @@ public class AutoBlueClose extends LinearOpMode {
 
             Trajectory closeright1 = drive.trajectoryBuilder(startPose)
                     .forward(-21.0)
-                    .splineTo(new Vector2d(8.0,36.0), Math.toRadians(0.0))
+                    .splineTo(new Vector2d(9.0,36.0), Math.toRadians(0.0))
                     .build();
             Trajectory closeright2 = drive.trajectoryBuilder(closeright1.end())
                     .forward(-10.0)
-                    .splineTo(new Vector2d(52.0, 29), Math.toRadians(0.0))
+                    .splineTo(new Vector2d(40.0, 30.5), Math.toRadians(0.0))
                     .build();
             Trajectory closeright3 = drive.trajectoryBuilder(closeright2.end())
+                    .forward(-12.0)
+                    .build();
+            Trajectory closeright4 = drive.trajectoryBuilder(closeright3.end())
                     .strafeRight(30.0)
                     .build();
             Trajectory closeleft1 = drive.trajectoryBuilder(startPose)
                     .forward(-20.0)
-                    .splineTo(new Vector2d(16.0,36.0), Math.toRadians(180.0))
+                    .splineTo(new Vector2d(15.0,36.0), Math.toRadians(180.0))
                     .build();
             Trajectory closeleft2 = drive.trajectoryBuilder(closeleft1.end())
                     .forward(-3.0)
@@ -181,6 +184,7 @@ public class AutoBlueClose extends LinearOpMode {
                 armAngle.setPosition(.36);
                 sleep(200);
                 drive.followTrajectory(closeright2);
+                drive.followTrajectory(closeright3);
                 runtime.reset();
                 servoProfile.generateProfile(.34, .23, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
@@ -199,7 +203,7 @@ public class AutoBlueClose extends LinearOpMode {
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
                 sleep(500);
-                drive.followTrajectory(closeright3);
+                drive.followTrajectory(closeright4);
                 sleep(100000000);
 
             }

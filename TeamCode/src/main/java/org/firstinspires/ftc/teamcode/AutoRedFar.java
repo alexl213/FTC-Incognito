@@ -120,52 +120,47 @@ public class AutoRedFar extends LinearOpMode {
 
         Trajectory farright1 = drive.trajectoryBuilder(startPose)
             .forward(-20.0)
-            .splineTo(new Vector2d(-32.0,-36.0), Math.toRadians(180.0))
+            .splineTo(new Vector2d(-33.0,-36.0), Math.toRadians(180.0))
             .build();
         Trajectory farright2 = drive.trajectoryBuilder(farright1.end())
             .forward(-3.0)
             .build();
         Trajectory farright3 = drive.trajectoryBuilder(farright2.end())
-            .strafeLeft(12.0)
-            .splineTo(new Vector2d(30.0, -15.0), Math.toRadians(0.0))
-            .splineTo(new Vector2d(40.0, -42.0), Math.toRadians(-90.0))
+            .strafeLeft(8.0)
+                .splineTo(new Vector2d(40.0, -41.0), Math.toRadians(-90.0))
             .build();
         Trajectory farright4 = drive.trajectoryBuilder(farright3.end())
             .forward(-12.0)
             .build();
-        Trajectory farright5 = drive.trajectoryBuilder(farright4.end())
-                    .strafeLeft(22.0)
-                    .build();
         Trajectory farleft1 = drive.trajectoryBuilder(startPose)
             .forward(-21.0)
-            .splineTo(new Vector2d(-40.0,-36.0), Math.toRadians(0.0))
+            .splineTo(new Vector2d(-39.0,-36.0), Math.toRadians(0.0))
             .build();
         Trajectory farleft2 = drive.trajectoryBuilder(farleft1.end())
-            .forward(-30.0)
-            .splineTo(new Vector2d(52.0, -29.0), Math.toRadians(0.0))
+            .forward(-3.0)
             .build();
-            Trajectory farleft3 = drive.trajectoryBuilder(farleft2.end())
-                    .strafeLeft(30.0)
-                    .build();
+        Trajectory farleft3 = drive.trajectoryBuilder(farleft2.end())
+                .strafeRight(8.0)
+                .splineTo(new Vector2d(-20.0, -12.0), Math.toRadians(0.0))
+                .strafeRight(30.0)
+                .splineTo(new Vector2d(40.0, -30.5), Math.toRadians(90.0))
+                .build();
+        Trajectory farleft4 = drive.trajectoryBuilder(farleft3.end())
+                .forward(-12.0)
+                .build();
         Trajectory farforward1 = drive.trajectoryBuilder(startPose)
-            .forward(-5.0)
-            .splineTo(new Vector2d(-40.0, -50.0), Math.toRadians(90.0))
-            .splineTo(new Vector2d(-36.0,-33.0), Math.toRadians(-90.0))
+            .forward(-47.0)
             .build();
         Trajectory farforward2 = drive.trajectoryBuilder(farforward1.end())
-            .forward(-3.5)
+            .forward(-4.0)
                 .build();
         Trajectory farforward3 = drive.trajectoryBuilder(farforward2.end())
-                .strafeRight(33.0)
-                .splineTo(new Vector2d(30.0, -20.0), Math.toRadians(0.0))
-            .splineTo(new Vector2d(40.0, -34.0), Math.toRadians(90.0))
+                .strafeLeft(35.0)
+            .splineTo(new Vector2d(40.0, -36.0), Math.toRadians(90.0))
             .build();
         Trajectory farforward4 = drive.trajectoryBuilder(farforward3.end())
             .forward(-12.0)
             .build();
-            Trajectory farforward5 = drive.trajectoryBuilder(farforward4.end())
-                    .strafeLeft(26.0)
-                    .build();
 
             if (opModeIsActive() && cX > 1450) {
                 telemetry.addData("Location: ", "Right");
@@ -207,8 +202,6 @@ public class AutoRedFar extends LinearOpMode {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
-                sleep(500);
-                drive.followTrajectory(farright5);
                 sleep(100000000);
             }
             if (opModeIsActive() && cX < 400) {
@@ -232,6 +225,8 @@ public class AutoRedFar extends LinearOpMode {
                 armAngle.setPosition(.36);
                 sleep(4000);
                 drive.followTrajectory(farleft2);
+                drive.followTrajectory(farleft3);
+                drive.followTrajectory(farleft4);
                 runtime.reset();
                 servoProfile.generateProfile(.34, .23, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
@@ -249,8 +244,6 @@ public class AutoRedFar extends LinearOpMode {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
-                sleep(500);
-                drive.followTrajectory(farleft3);
                 sleep(100000000);
             }
             if (opModeIsActive() && cX < 1450 && cX > 400) {
@@ -293,8 +286,6 @@ public class AutoRedFar extends LinearOpMode {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
-                sleep(500);
-                drive.followTrajectory(farforward5);
                 sleep(100000000);
 
             }

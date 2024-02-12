@@ -118,7 +118,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                 servoProfile.initServos(axonLeft, axonRight);
 
                 robot.driveAndStrafe(gamepad1);
-                robot.driveAndStrafeSlow(gamepad1);
+                robot.driveAndStrafeSlowTele(gamepad1, gamepad2, scoringservoLeft, scoringservoRight);
 
                 intakePower = Range.clip(intake1, -.45, .45);
                 scoringleftPower = Range.clip(scoring, -0.65, 0.1);
@@ -184,11 +184,12 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     scoringservoLeft.setPosition(.1);
                     scoringservoRight.setPosition(.3);
                     runtime.reset();
-                    servoProfile.generateProfile(.34, .23, .21, .8);
+                    servoProfile.generateProfile(.5, .7, .21, .8);//maxaccel = 0.23, maxvelo = .34
                      while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive()) {
                          servoProfile.setServoPathTele(scoring, robot, gamepad2, gamepad1, scoringLeft, scoringRight, Kg);
 
                      }
+//yo mama
 
                      //armAngle.setPosition(0);
                     // if(runtime.seconds() == .6){
@@ -206,8 +207,8 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     scoringservoLeft.setPosition(.1);
                     scoringservoRight.setPosition(.3);
                      runtime.reset();
-                     servoProfile.generateProfile(.34, .23, .8, .21);
-                    while (servoProfile.servoProfile1.get(runtime.seconds()).getX() < .20999 && opModeIsActive() || runtime.seconds() < 3) {
+                     servoProfile.generateProfile(.5, .65, .8, .21 );
+                    while (servoProfile.servoProfile1.get(runtime.seconds()).getX() >= .211111 && opModeIsActive()) {
                         servoProfile.setServoPathTele(scoring, robot, gamepad2, gamepad1, scoringLeft, scoringRight, Kg);
 
                     }

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 public class DrivingLogic {
@@ -56,7 +57,25 @@ public class DrivingLogic {
         frightDrive.setPower(frightPower);
 
     }
+    public void driveAndStrafeSlowTele(Gamepad gamepad1, Gamepad gamepad2, Servo scoringServoLeft, Servo scoringServoRight) {
+        while (gamepad1.left_trigger > .1) {
+            drive1 = -gamepad1.left_stick_y;
+            turn = gamepad1.right_stick_x;
+            strafe = -gamepad1.left_stick_x;
 
+            bleftPower = Range.clip(drive1 - strafe - turn, -.5, .5);
+            brightPower = Range.clip(drive1 + strafe + turn, -.5, .5);
+            fleftPower = Range.clip(drive1 - strafe + turn, -.5, .5);
+            frightPower = Range.clip(drive1 + strafe - turn, -.5, .5);
+
+            clawOperations(scoringServoLeft, scoringServoRight,gamepad2);
+
+            bleftDrive.setPower(bleftPower);
+            brightDrive.setPower(brightPower);
+            fleftDrive.setPower(fleftPower);
+            frightDrive.setPower(frightPower);
+        }
+    }
     public void driveAndStrafeSlow(Gamepad gamepad1) {
         while (gamepad1.left_trigger > .1) {
             drive1 = -gamepad1.left_stick_y;
@@ -67,6 +86,7 @@ public class DrivingLogic {
                 brightPower = Range.clip(drive1 + strafe + turn, -.2, .2);
                 fleftPower = Range.clip(drive1 - strafe + turn, -.2, .2);
                 frightPower = Range.clip(drive1 + strafe - turn, -.2, .2);
+
 
                 bleftDrive.setPower(bleftPower);
                 brightDrive.setPower(brightPower);
@@ -85,5 +105,21 @@ public class DrivingLogic {
                 scoringRight.setPower(Range.clip(scoring, -.35, 0));
                 scoringLeft.setPower(Range.clip(scoring, -.35, 0));
     }
+
 }
+    public void clawOperations(Servo scoringServoLeft, Servo scoringServoRight, Gamepad gamepad2){
+        if (gamepad2.right_bumper) {
+            scoringServoRight.setPosition(.1);//0
+        }
+        if (gamepad2.right_trigger > 0.2) {
+            scoringServoRight.setPosition(.3);//.55
+    }
+
+        if (gamepad2.left_bumper) {
+            scoringServoLeft.setPosition(.3);//.55
+        }
+        if (gamepad2.left_trigger > 0.2) {
+            scoringServoLeft.setPosition(.1);//0
+        }
+    }
 }

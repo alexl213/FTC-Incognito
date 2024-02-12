@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -34,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name = "AutoBlueClose")
-
 public class AutoBlueClose extends LinearOpMode {
 
     private Servo scoringservoLeft = null;
@@ -117,11 +117,11 @@ public class AutoBlueClose extends LinearOpMode {
 
             Trajectory closeright1 = drive.trajectoryBuilder(startPose)
                     .forward(-21.0)
-                    .splineTo(new Vector2d(9.0,36.0), Math.toRadians(0.0))
+                    .splineTo(new Vector2d(9.0,32.0), Math.toRadians(0.0))
                     .build();
             Trajectory closeright2 = drive.trajectoryBuilder(closeright1.end())
                     .forward(-10.0)
-                    .splineTo(new Vector2d(40.0, 30.5), Math.toRadians(0.0))
+                    .splineTo(new Vector2d(40.0, 29.5), Math.toRadians(0.0))
                     .build();
             Trajectory closeright3 = drive.trajectoryBuilder(closeright2.end())
                     .forward(-12.0)
@@ -139,7 +139,7 @@ public class AutoBlueClose extends LinearOpMode {
             Trajectory closeleft3 = drive.trajectoryBuilder(closeleft2.end())
                     .strafeRight(5.0)
                     .splineTo(new Vector2d(30.0, 22.0), Math.toRadians(0.0))
-                    .splineTo(new Vector2d(40.0, 41.0), Math.toRadians(90.0))
+                    .splineTo(new Vector2d(40.0, 41.5), Math.toRadians(90.0))
                     .build();
             Trajectory closeleft4 = drive.trajectoryBuilder(closeleft3.end())
                     .forward(-12.0)
@@ -154,16 +154,16 @@ public class AutoBlueClose extends LinearOpMode {
                     .build();
             Trajectory closeforward2 = drive.trajectoryBuilder(closeforward1.end())
                     .forward(-5.0)
-                    .splineTo(new Vector2d(40.0, 38.0), Math.toRadians(0.0))
+                    .splineTo(new Vector2d(40.0, 33.0), Math.toRadians(0.0))
                     .build();
             Trajectory closeforward3 = drive.trajectoryBuilder(closeforward2.end())
-                    .forward(-12.0)
+                    .forward(-13.0)
                     .build();
             Trajectory closeforward4 = drive.trajectoryBuilder(closeforward3.end())
                     .strafeRight(26.0)
                     .build();
 
-            if (opModeIsActive() && cX > 1450) {
+            if (opModeIsActive() && cX > 1350) {
                 telemetry.addData("Location: ", "Right");
                 telemetry.update();
                 servoProfile.initServos(axonLeft, axonRight);
@@ -186,8 +186,8 @@ public class AutoBlueClose extends LinearOpMode {
                 drive.followTrajectory(closeright2);
                 drive.followTrajectory(closeright3);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .21, .8);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                servoProfile.generateProfile(.5, .7, .21, .8);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
@@ -197,8 +197,8 @@ public class AutoBlueClose extends LinearOpMode {
                 scoringservoRight.setPosition(.32);
                 sleep(500);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .8, .21);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                servoProfile.generateProfile(.5, .7, .8, .21);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() >= .21999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
@@ -207,7 +207,7 @@ public class AutoBlueClose extends LinearOpMode {
                 sleep(100000000);
 
             }
-            if (opModeIsActive() && cX < 400) {
+            if (opModeIsActive() && cX < 550) {
                 telemetry.addData("Location: ", "Left");
                 telemetry.update();
                 servoProfile.initServos(axonLeft, axonRight);
@@ -231,8 +231,8 @@ public class AutoBlueClose extends LinearOpMode {
                 drive.followTrajectory(closeleft3);
                 drive.followTrajectory(closeleft4);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .21, .8);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                servoProfile.generateProfile(0.5, 0.7, .21, .8);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
@@ -242,8 +242,8 @@ public class AutoBlueClose extends LinearOpMode {
                 scoringservoRight.setPosition(.32);
                 sleep(500);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .8, .21);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                servoProfile.generateProfile(.5, .7, .8, .21);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() >= .21999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
@@ -252,7 +252,7 @@ public class AutoBlueClose extends LinearOpMode {
                 sleep(100000000);
 
             }
-            if (opModeIsActive() && cX < 1450 && cX > 400) {
+            if (opModeIsActive() && cX < 1350 && cX > 400) {
                 telemetry.addData("Location: ", "Center");
                 telemetry.update();
                 servoProfile.initServos(axonLeft, axonRight);
@@ -275,8 +275,8 @@ public class AutoBlueClose extends LinearOpMode {
                 drive.followTrajectory(closeforward2);
                 drive.followTrajectory(closeforward3);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .21, .8);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                servoProfile.generateProfile(.5, .7, .21, .8);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
@@ -286,8 +286,8 @@ public class AutoBlueClose extends LinearOpMode {
                 scoringservoRight.setPosition(.32);
                 sleep(500);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .8, .21);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
+                servoProfile.generateProfile(.5, .7, .8, .21);
+                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() >= .21999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }

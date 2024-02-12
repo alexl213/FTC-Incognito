@@ -117,7 +117,7 @@ public class AutoBlueFarPark extends LinearOpMode {
 
         Trajectory farright1 = drive.trajectoryBuilder(startPose)
                 .forward(-21.0)
-                .splineTo(new Vector2d(-39.0,36.0), Math.toRadians(0.0))
+                .splineTo(new Vector2d(-39.0,32.0), Math.toRadians(0.0))
                 .build();
         Trajectory farright2 = drive.trajectoryBuilder(farright1.end())
                 .forward(-3.0)
@@ -126,7 +126,7 @@ public class AutoBlueFarPark extends LinearOpMode {
                 .strafeLeft(8.0)
                 .splineTo(new Vector2d(-20.0, 12.0), Math.toRadians(0.0))
                 .strafeLeft(30.0)
-                .splineTo(new Vector2d(40.0, 30.5), Math.toRadians(-90.0))
+                .splineTo(new Vector2d(40.0, 29.5), Math.toRadians(-90.0))
                 .build();
         Trajectory farright4 = drive.trajectoryBuilder(farright3.end())
                 .forward(-12.0)
@@ -143,7 +143,7 @@ public class AutoBlueFarPark extends LinearOpMode {
             .build();
         Trajectory farleft3 = drive.trajectoryBuilder(farleft2.end())
             .strafeRight(8.0)
-            .splineTo(new Vector2d(40.0, 41.0), Math.toRadians(90.0))
+            .splineTo(new Vector2d(40.0, 41.5), Math.toRadians(90.0))
             .build();
         Trajectory farleft4 = drive.trajectoryBuilder(farleft3.end())
             .forward(-12.0)
@@ -159,17 +159,17 @@ public class AutoBlueFarPark extends LinearOpMode {
             .build();
         Trajectory farforward3 = drive.trajectoryBuilder(farforward2.end())
             .strafeRight(35.0)
-                .splineTo(new Vector2d(40.0, 38.0), Math.toRadians(90.0))
+                .splineTo(new Vector2d(40.0, 33.0), Math.toRadians(90.0))
             .build();
         Trajectory farforward4 = drive.trajectoryBuilder(farforward3.end())
-                .forward(-12.0)
+                .forward(-13.0)
                 .build();
         Trajectory farforward5 = drive.trajectoryBuilder(farforward4.end())
                     .strafeRight(26.0)
                     .build();
 
 
-            if (opModeIsActive() && cX > 1450) {
+            if (opModeIsActive() && cX > 1350) {
                 telemetry.addData("Location: ", "Right");
                 telemetry.update();
                 servoProfile.initServos(axonLeft, axonRight);
@@ -214,7 +214,7 @@ public class AutoBlueFarPark extends LinearOpMode {
                 sleep(100000000);
 
             }
-            if (opModeIsActive() && cX < 400) {
+            if (opModeIsActive() && cX < 550) {
                 telemetry.addData("Location: ", "Left");
                 telemetry.update();
                 servoProfile.initServos(axonLeft, axonRight);
@@ -259,7 +259,7 @@ public class AutoBlueFarPark extends LinearOpMode {
                 sleep(100000000);
 
             }
-            if (opModeIsActive() && cX < 1450 && cX > 400) {
+            if (opModeIsActive() && cX < 1350 && cX > 550) {
                 telemetry.addData("Location: ", "Center");
                 telemetry.update();
                 servoProfile.initServos(axonLeft, axonRight);

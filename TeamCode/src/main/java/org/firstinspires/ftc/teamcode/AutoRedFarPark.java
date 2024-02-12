@@ -125,7 +125,7 @@ public class AutoRedFarPark extends LinearOpMode {
                     .build();
             Trajectory farright3 = drive.trajectoryBuilder(farright2.end())
                     .strafeLeft(8.0)
-                    .splineTo(new Vector2d(40.0, -41.0), Math.toRadians(-90.0))
+                    .splineTo(new Vector2d(40.0, -44.5), Math.toRadians(-90.0))
                     .build();
             Trajectory farright4 = drive.trajectoryBuilder(farright3.end())
                     .forward(-12.0)
@@ -135,7 +135,7 @@ public class AutoRedFarPark extends LinearOpMode {
                     .build();
             Trajectory farleft1 = drive.trajectoryBuilder(startPose)
                     .forward(-21.0)
-                    .splineTo(new Vector2d(-39.0,-36.0), Math.toRadians(0.0))
+                    .splineTo(new Vector2d(-39.0,-32.0), Math.toRadians(0.0))
                     .build();
             Trajectory farleft2 = drive.trajectoryBuilder(farleft1.end())
                     .forward(-3.0)
@@ -144,7 +144,7 @@ public class AutoRedFarPark extends LinearOpMode {
                     .strafeRight(8.0)
                     .splineTo(new Vector2d(-20.0, -12.0), Math.toRadians(0.0))
                     .strafeRight(30.0)
-                    .splineTo(new Vector2d(40.0, -30.5), Math.toRadians(90.0))
+                    .splineTo(new Vector2d(40.0, -34.0), Math.toRadians(90.0))
                     .build();
             Trajectory farleft4 = drive.trajectoryBuilder(farleft3.end())
                     .forward(-12.0)
@@ -160,7 +160,7 @@ public class AutoRedFarPark extends LinearOpMode {
                     .build();
             Trajectory farforward3 = drive.trajectoryBuilder(farforward2.end())
                     .strafeLeft(35.0)
-                    .splineTo(new Vector2d(40.0, -34.0), Math.toRadians(90.0))
+                    .splineTo(new Vector2d(40.0, -38.0), Math.toRadians(-90.0))
                     .build();
             Trajectory farforward4 = drive.trajectoryBuilder(farforward3.end())
                     .forward(-12.0)
@@ -169,7 +169,7 @@ public class AutoRedFarPark extends LinearOpMode {
                     .strafeLeft(26.0)
                     .build();
 
-            if (opModeIsActive() && cX > 1450) {
+            if (opModeIsActive() && cX > 1350) {
                 telemetry.addData("Location: ", "Right");
                 telemetry.update();
                 servoProfile.initServos(axonLeft, axonRight);
@@ -193,7 +193,7 @@ public class AutoRedFarPark extends LinearOpMode {
                 drive.followTrajectory(farright3);
                 drive.followTrajectory(farright4);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .21, .8);
+                servoProfile.generateProfile(.5, .7, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
@@ -204,7 +204,7 @@ public class AutoRedFarPark extends LinearOpMode {
                 scoringservoRight.setPosition(.32);
                 sleep(500);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .8, .21);
+                servoProfile.generateProfile(.5, .7, .8, .21);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
@@ -213,7 +213,7 @@ public class AutoRedFarPark extends LinearOpMode {
                 drive.followTrajectory(farright5);
                 sleep(100000000);
             }
-            if (opModeIsActive() && cX < 400) {
+            if (opModeIsActive() && cX < 550) {
                 telemetry.addData("Location: ", "Left");
                 telemetry.update();
                 servoProfile.initServos(axonLeft, axonRight);
@@ -237,7 +237,7 @@ public class AutoRedFarPark extends LinearOpMode {
                 drive.followTrajectory(farleft3);
                 drive.followTrajectory(farleft4);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .21, .8);
+                servoProfile.generateProfile(.5, .7, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
@@ -248,7 +248,7 @@ public class AutoRedFarPark extends LinearOpMode {
                 scoringservoRight.setPosition(.32);
                 sleep(500);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .8, .21);
+                servoProfile.generateProfile(.5, .7, .8, .21);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
@@ -257,7 +257,7 @@ public class AutoRedFarPark extends LinearOpMode {
                 drive.followTrajectory(farleft5);
                 sleep(100000000);
             }
-            if (opModeIsActive() && cX < 1450 && cX > 400) {
+            if (opModeIsActive() && cX < 1350 && cX > 550) {
                 telemetry.addData("Location: ", "Center");
                 telemetry.update();
                 servoProfile.initServos(axonLeft, axonRight);
@@ -281,7 +281,7 @@ public class AutoRedFarPark extends LinearOpMode {
                 drive.followTrajectory(farforward3);
                 drive.followTrajectory(farforward4);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .21, .8);
+                servoProfile.generateProfile(.5, .7, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
@@ -292,7 +292,7 @@ public class AutoRedFarPark extends LinearOpMode {
                 scoringservoRight.setPosition(.32);
                 sleep(500);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .8, .21);
+                servoProfile.generateProfile(.5, .7, .8, .21);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);

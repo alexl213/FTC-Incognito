@@ -32,6 +32,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 @Autonomous(name = "GoodAutoTEST")
 
@@ -39,6 +40,7 @@ public class GoodAutoTEST extends LinearOpMode {
 
     private Servo scoringservoLeft = null;
     private Servo scoringservoRight = null;
+    public static double Kg = -0.125;
     double cX = 0;
     double cY = 0;
     double width = 0;
@@ -67,6 +69,29 @@ public class GoodAutoTEST extends LinearOpMode {
     public static final double objectWidthInRealWorldUnits = 3.5;  // Replace with the actual width of the object in real-world units
     public static final double focalLength = 1531.42;  // Replace with the focal length of the camera in pixels
 
+    enum State {
+        rightclose1,
+        rightclose2,
+        rightclose21,
+        rightclose22,
+        wait1,
+        rightclose3,
+        wait2,
+        rightclose4,
+        wait3,
+        rightclose5,
+        wait4,
+        rightclose6,
+        wait5,
+        rightclose7,
+        wait6,
+        rightclose8,
+        IDLE
+    }
+
+    double waitTime1 = 1.5;
+    ElapsedTime waitTimer1 = new ElapsedTime();
+    State currentState = State.IDLE;
 
     @Override
     public void runOpMode() {
@@ -110,45 +135,57 @@ public class GoodAutoTEST extends LinearOpMode {
             intakePower = Range.clip(intake1, -.45, .45);
             scoringleftPower = Range.clip(scoring, -0.65, 0.1);
             scoringrightPower = Range.clip(scoring, -0.65, 0.1);
-
+            if(scoringRight.getCurrentPosition() < -20 || scoringLeft.getCurrentPosition() < -20 ){//less than -20
+                scoringRight.setPower(Range.clip(scoring, -.35,.12) + Kg);
+                scoringLeft.setPower(Range.clip(scoring, -.35,.12) + Kg);
+            }
+            else{
+                scoringRight.setPower(Range.clip(scoring, -.35,0));
+                scoringLeft.setPower(Range.clip(scoring, -.35,0));
+            }
 
             Pose2d startPose = new Pose2d(12, -63, Math.toRadians(-90));
 
             drive.setPoseEstimate(startPose);
 
             Trajectory rightclose1 = drive.trajectoryBuilder(startPose)
-                    .forward(-5.0)
-                    .splineTo(new Vector2d(32.0, -36.0), Math.toRadians(0.0))
+                    .strafeLeft(10.0)
                     .build();
             Trajectory rightclose2 = drive.trajectoryBuilder(rightclose1.end())
-                    .forward(-1.0)
-                    .splineTo(new Vector2d(52.0, -41.0), Math.toRadians(0.0))
+                    .forward(-35.0)
                     .build();
-            Trajectory rightclose3 = drive.trajectoryBuilder(rightclose2.end())
+            // 2.5-2.7 seconds in, driving over spike mark
+            Trajectory rightclose21 = drive.trajectoryBuilder(rightclose2.end())
+                    .forward(-4.0)
+                    .build();
+            Trajectory rightclose22 = drive.trajectoryBuilder(rightclose21.end())
+                    .strafeLeft(2.0)
+                    .splineTo(new Vector2d(52.0, -41.0), Math.toRadians(-90.0))
+                    .build();
+            //5.33 seconds, stops at backdrop
+            Trajectory rightclose3 = drive.trajectoryBuilder(rightclose22.end())
                     .forward(3.0)
                     .splineTo(new Vector2d(30.0, -12.0), Math.toRadians(180.0))
                     .forward(50.0)
                     .splineTo(new Vector2d(-58.0, -29.0), Math.toRadians(180.0))
                     .build();
+            //12.17 seconds arrives at white stacks
             Trajectory rightclose4 = drive.trajectoryBuilder(rightclose3.end())
                     .forward(-3.0)
-                    .splineTo(new Vector2d(-30.0, -12.0), Math.toRadians(0.0))
-                    .forward(-50.0)
-                    .splineTo(new Vector2d(52.0, -41.0), Math.toRadians(0.0))
                     .build();
             Trajectory rightclose5 = drive.trajectoryBuilder(rightclose4.end())
-                    .forward(3.0)
-                    .splineTo(new Vector2d(30.0, -12.0), Math.toRadians(180.0))
-                    .forward(50.0)
-                    .splineTo(new Vector2d(-58.0, -29.0), Math.toRadians(180.0))
+                    .strafeRight(3.0)
                     .build();
             Trajectory rightclose6 = drive.trajectoryBuilder(rightclose5.end())
+                    .forward(3.0)
+                    .build();
+            Trajectory rightclose7 = drive.trajectoryBuilder(rightclose6.end())
                     .forward(-3.0)
                     .splineTo(new Vector2d(-30.0, -12.0), Math.toRadians(0.0))
                     .forward(-50.0)
                     .splineTo(new Vector2d(52.0, -41.0), Math.toRadians(0.0))
                     .build();
-            Trajectory rightclose7 = drive.trajectoryBuilder(rightclose6.end())
+            Trajectory rightclose8 = drive.trajectoryBuilder(rightclose7.end())
                     .strafeLeft(22.0)
                     .build();
 
@@ -164,33 +201,139 @@ public class GoodAutoTEST extends LinearOpMode {
                 armAngle.setPosition(.36);
                 sleep(100);
                 controlHubCam.stopStreaming();
-                drive.followTrajectory(rightclose1);
-                armAngle.setPosition(.0);
-                sleep(100);
-                scoringservoLeft.setPosition(.32);
-                sleep(100);
-                armAngle.setPosition(.36);
-                scoringservoLeft.setPosition(.05);
-                scoringservoRight.setPosition(.32);
-                runtime.reset();
-                servoProfile.generateProfile(.34, .23, .21, .8);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .22 && opModeIsActive()) {
-                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                            , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
-                }
-                drive.followTrajectory(rightclose2);
-                scoringservoRight.setPosition(.05);
-                sleep(300);
-                scoringservoLeft.setPosition(.05);
-                scoringservoRight.setPosition(.32);
-                runtime.reset();
-                servoProfile.generateProfile(.34, .23, .8, .21);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .6 && opModeIsActive()) {
-                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                            , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
+                drive.followTrajectoryAsync(rightclose1);
+                currentState = State.rightclose1;
+
+                while (opModeIsActive() && !isStopRequested()) {
+                    // Our state machine logic
+                    // You can have multiple switch statements running together for multiple state machines
+                    // in parallel. This is the basic idea for subsystems and commands.
+
+                    // We essentially define the flow of the state machine through this switch statement
+                    switch (currentState) {
+                        case rightclose1:
+                            if (!drive.isBusy()) {
+                                drive.followTrajectoryAsync(rightclose2);
+                                currentState = State.rightclose2;
+                            }
+                            break;
+                        case rightclose2:
+                            if (!drive.isBusy()) {
+                                drive.followTrajectoryAsync(rightclose21);
+                                currentState = State.rightclose21;
+                            }
+                            break;
+                        case rightclose21:
+                            if (!drive.isBusy()) {
+                                drive.followTrajectoryAsync(rightclose22);
+                                currentState = State.rightclose22;
+                            }
+                            break;
+                        case rightclose22:
+                            if (!drive.isBusy()) {
+                                currentState = State.wait1;
+                                waitTimer1.reset();
+                            }
+                            break;
+                        case wait1:
+                            if (waitTimer1.seconds() >= waitTime1) {
+                                drive.followTrajectoryAsync(rightclose3);
+                                currentState = State.rightclose3;
+                            }
+                            break;
+                        case rightclose3:
+                            if (!drive.isBusy()) {
+                                currentState = State.wait2;
+                                waitTimer1.reset();
+                            }
+                            break;
+                        case wait2:
+                            if (waitTimer1.seconds() >= waitTime1) {
+                                drive.followTrajectoryAsync(rightclose4);
+                                currentState = State.rightclose4;
+                            }
+                            break;
+                        case rightclose4:
+                            if (!drive.isBusy()) {
+                                currentState = State.wait3;
+                                waitTimer1.reset();
+                            }
+                            break;
+                        case wait3:
+                            if (waitTimer1.seconds() >= waitTime1) {
+                                drive.followTrajectoryAsync(rightclose5);
+                                currentState = State.rightclose5;
+                            }
+                            break;
+                        case rightclose5:
+                            if (!drive.isBusy()) {
+                                currentState = State.wait4;
+                                waitTimer1.reset();
+                            }
+                            break;
+                        case wait4:
+                            if (waitTimer1.seconds() >= waitTime1) {
+                                drive.followTrajectoryAsync(rightclose6);
+                                currentState = State.rightclose6;
+                            }
+                            break;
+                        case rightclose6:
+                            if (!drive.isBusy()) {
+                                currentState = State.wait5;
+                                waitTimer1.reset();
+                            }
+                            break;
+                        case wait5:
+                            if (waitTimer1.seconds() >= waitTime1) {
+                                drive.followTrajectoryAsync(rightclose7);
+                                currentState = State.rightclose7;
+                            }
+                            break;
+                        case rightclose7:
+                            if (!drive.isBusy()) {
+                                currentState = State.wait6;
+                            }
+                            break;
+                        case wait6:
+                            if (waitTimer1.seconds() >= waitTime1) {
+                                drive.followTrajectoryAsync(rightclose8);
+                                currentState = State.rightclose8;
+                            }
+                            break;
+                        case rightclose8:
+                            if (!drive.isBusy()) {
+                                currentState = State.IDLE;
+                            }
+                        case IDLE:
+                            break;
+                    }
+                    drive.update();
+
+                    runtime.reset();
+                    if (runtime.seconds() == 2.3) {
+                        armAngle.setPosition(.0);
+                    }
+                    if (runtime.seconds() == 2.5) {
+                        scoringservoLeft.setPosition(.32);
+                    }
+                    if (runtime.seconds() == 2.7) {
+                        scoringservoLeft.setPosition(.05);
+                        scoringservoRight.setPosition(.32);
+                    }
+                    if (runtime.seconds() == 2.8) {
+                        armAngle.setPosition(.36);
+                    }
+                    if (runtime.seconds() == 3.1) {
+                        servoProfile.generateProfile(.5, .7, .21, .8);//maxaccel = 0.23, maxvelo = .34
+                        while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive()) {
+                            servoProfile.setServoPathTele(scoring, robot, gamepad2, gamepad1, scoringLeft, scoringRight, Kg);
+
+                        }
+                    }
                 }
 
             }
+
             if (opModeIsActive() && cX < 400) {
                 telemetry.addData("Location: ", "Left");
                 telemetry.update();

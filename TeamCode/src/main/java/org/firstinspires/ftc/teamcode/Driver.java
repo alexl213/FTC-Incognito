@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -40,6 +42,8 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
         private DrivingLogic robot = new DrivingLogic(hardwareMap, gamepad1);
         private FtcDashboard dashboard = FtcDashboard.getInstance();
         private Telemetry dashboardTelemetry = dashboard.getTelemetry();
+        private MecanumDrive mecanumDrive;
+        IMU imu;//dont remember if this is correct IMU name
 
 
 
@@ -67,6 +71,11 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
             hangLeft = hardwareMap.get(DcMotor.class, "hang_Left");
             hangRight = hardwareMap.get(DcMotor.class, "hang_Right");
             robot.driveMotorInit(frightDrive, fleftDrive,bleftDrive,brightDrive);
+            imu = hardwareMap.get(IMU.class, "imu");
+            robot.fieldCentricDriveInit(imu);
+
+
+
 
 
             // Most robots need the motor on one side to be reversed to drive forward
@@ -75,6 +84,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
             brightDrive.setDirection(DcMotor.Direction.FORWARD);
             fleftDrive.setDirection(DcMotor.Direction.REVERSE);
             frightDrive.setDirection(DcMotor.Direction.REVERSE);
+
             //intake.setDirection(DcMotor.Direction.FORWARD);
             scoringLeft.setDirection(DcMotor.Direction.FORWARD);
             scoringRight.setDirection(DcMotor.Direction.REVERSE);
@@ -117,8 +127,10 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 
                 servoProfile.initServos(axonLeft, axonRight);
 
-                robot.driveAndStrafe(gamepad1);
-                robot.driveAndStrafeSlowTele(gamepad1, gamepad2, scoringservoLeft, scoringservoRight);
+//                robot.driveAndStrafe(gamepad1);
+//                robot.driveAndStrafeSlowTele(gamepad1, gamepad2, scoringservoLeft, scoringservoRight);
+                robot.driveAndStrafeFieldCentric(gamepad1);
+                robot.driveAndStrafeFieldCentricSlow(gamepad1,gamepad2, scoringservoLeft,scoringservoRight);
 
                 intakePower = Range.clip(intake1, -.45, .45);
                 scoringleftPower = Range.clip(scoring, -0.65, 0.1);
@@ -184,7 +196,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     scoringservoLeft.setPosition(.1);
                     scoringservoRight.setPosition(.3);
                     runtime.reset();
-                    servoProfile.generateProfile(.5, .7, .21, .8);//maxaccel = 0.23, maxvelo = .34
+                    servoProfile.generateProfile(.5, .7, .21, .8);//maxaccel = 0.23, maxvelo = .34(old values)
                      while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive()) {
                          servoProfile.setServoPathTele(scoring, robot, gamepad2, gamepad1, scoringLeft, scoringRight, Kg);
 

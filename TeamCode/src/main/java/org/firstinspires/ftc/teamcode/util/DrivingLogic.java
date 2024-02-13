@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class DrivingLogic {
     HardwareMap hwMap;
@@ -20,16 +24,13 @@ public class DrivingLogic {
     DcMotor brightDrive;
     DcMotor fleftDrive;
     DcMotor frightDrive;
-
-
+    IMU imu;
     public DrivingLogic() {
     }
 
     public DrivingLogic(HardwareMap hwMap, Gamepad gamepad1) {
         this.hwMap = hwMap;
         this.gamepad1 = gamepad1;
-
-
     }
 
     public void driveMotorInit(DcMotor frightDrive, DcMotor fleftDrive, DcMotor bleftDrive, DcMotor brightDrive) {
@@ -38,6 +39,56 @@ public class DrivingLogic {
         this.fleftDrive = fleftDrive;
         this.bleftDrive = bleftDrive;
         this.brightDrive = brightDrive;
+    }
+    public void fieldCentricDriveInit(IMU imu){
+        IMU.Parameters parameters = new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                        RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));//might be UP if its asking what direction it is facing when method is called
+        imu.initialize(parameters);
+        imu.resetYaw();
+    }
+    public void driveAndStrafeFieldCentric(Gamepad gamepad1) { //TESTINGGGGGG!
+//        drive1 = -gamepad1.left_stick_y;
+//        turn = gamepad1.right_stick_x;
+        strafe = -gamepad1.left_stick_x;
+
+        double heading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double adjustedLeftX = -gamepad1.left_stick_y * Math.sin(heading) + gamepad1.left_stick_x * Math.cos(heading);
+        double adjustedLeftY = gamepad1.left_stick_y * Math.cos(heading) + gamepad1.left_stick_x * Math.sin(heading);
+
+
+        bleftPower = Range.clip(adjustedLeftY - adjustedLeftX - turn, -1, 1);
+        brightPower = Range.clip(adjustedLeftY + adjustedLeftX + turn, -1, 1);
+        fleftPower = Range.clip(adjustedLeftY - adjustedLeftX + turn, -1, 1);
+        frightPower = Range.clip(adjustedLeftY + adjustedLeftX - turn, -1, 1);
+
+        bleftDrive.setPower(bleftPower);
+        brightDrive.setPower(brightPower);
+        fleftDrive.setPower(fleftPower);
+        frightDrive.setPower(frightPower);
+    }
+    public void driveAndStrafeFieldCentricSlow(Gamepad gamepad1, Gamepad gamepad2, Servo scoringServoLeft, Servo scoringServoRight) { //TESTINGGGGG!
+        while (gamepad1.left_trigger > .1) {
+            strafe = -gamepad1.left_stick_x;
+
+            double heading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            double adjustedLeftX = -gamepad1.left_stick_y * Math.sin(heading) + gamepad1.left_stick_x * Math.cos(heading);
+            double adjustedLeftY = gamepad1.left_stick_y * Math.cos(heading) + gamepad1.left_stick_x * Math.sin(heading);
+
+
+            bleftPower = Range.clip(adjustedLeftY - adjustedLeftX - turn, -.5, .5);
+            brightPower = Range.clip(adjustedLeftY + adjustedLeftX + turn, -.5, .5);
+            fleftPower = Range.clip(adjustedLeftY - adjustedLeftX + turn, -.5, .5);
+            frightPower = Range.clip(adjustedLeftY + adjustedLeftX - turn, -.5, .5);
+
+            clawOperations(scoringServoLeft, scoringServoRight,gamepad2);
+
+            bleftDrive.setPower(bleftPower);
+            brightDrive.setPower(brightPower);
+            fleftDrive.setPower(fleftPower);
+            frightDrive.setPower(frightPower);
+        }
     }
 
 

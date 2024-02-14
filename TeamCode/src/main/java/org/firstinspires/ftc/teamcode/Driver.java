@@ -129,8 +129,8 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 
 //                robot.driveAndStrafe(gamepad1);
 //                robot.driveAndStrafeSlowTele(gamepad1, gamepad2, scoringservoLeft, scoringservoRight);
-                robot.driveAndStrafeFieldCentric(gamepad1);
-                robot.driveAndStrafeFieldCentricSlow(gamepad1,gamepad2, scoringservoLeft,scoringservoRight);
+                robot.driveAndStrafeFieldCentric(gamepad1, imu);
+                robot.driveAndStrafeFieldCentricSlow(gamepad1,gamepad2, scoringservoLeft,scoringservoRight, imu, scoringLeft, scoringRight, Kg);
 
                 intakePower = Range.clip(intake1, -.45, .45);
                 scoringleftPower = Range.clip(scoring, -0.65, 0.1);

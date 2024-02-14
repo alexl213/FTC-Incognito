@@ -24,7 +24,6 @@ public class DrivingLogic {
     DcMotor brightDrive;
     DcMotor fleftDrive;
     DcMotor frightDrive;
-    IMU imu;
     public DrivingLogic() {
     }
 
@@ -41,48 +40,54 @@ public class DrivingLogic {
         this.brightDrive = brightDrive;
     }
     public void fieldCentricDriveInit(IMU imu){
+        imu.resetYaw();
         IMU.Parameters parameters = new IMU.Parameters(
                 new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.UP,
                         RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));//might be UP if its asking what direction it is facing when method is called
         imu.initialize(parameters);
-        imu.resetYaw();
+//        imu.resetYaw();
     }
-    public void driveAndStrafeFieldCentric(Gamepad gamepad1) { //TESTINGGGGGG!
+    public void driveAndStrafeFieldCentric(Gamepad gamepad1, IMU imu) { //TESTINGGGGGG!
 //        drive1 = -gamepad1.left_stick_y;
-//        turn = gamepad1.right_stick_x;
-        strafe = -gamepad1.left_stick_x;
+        turn = gamepad1.right_stick_x;
 
-        double heading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        double adjustedLeftX = -gamepad1.left_stick_y * Math.sin(heading) + gamepad1.left_stick_x * Math.cos(heading);
-        double adjustedLeftY = gamepad1.left_stick_y * Math.cos(heading) + gamepad1.left_stick_x * Math.sin(heading);
+        double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + 1.5; // 1.5 = offset heading robot starts in after autonomous in RADIANS(90 degrees to left)
+        //make static variable passed from auto into a separate class then into heading for offset since it can vary slightly(or not if no issues)
+        double adjustedLeftX = gamepad1.left_stick_x * Math.cos(-heading) - (-gamepad1.left_stick_y) * Math.sin(-heading) ;
+        double adjustedLeftY = gamepad1.left_stick_x * Math.sin(-heading) + (-gamepad1.left_stick_y) * Math.cos(-heading);
 
+        double max = Math.max(Math.abs(adjustedLeftX) + Math.abs(adjustedLeftY) + Math.abs(turn), 1);
 
-        bleftPower = Range.clip(adjustedLeftY - adjustedLeftX - turn, -1, 1);
-        brightPower = Range.clip(adjustedLeftY + adjustedLeftX + turn, -1, 1);
-        fleftPower = Range.clip(adjustedLeftY - adjustedLeftX + turn, -1, 1);
-        frightPower = Range.clip(adjustedLeftY + adjustedLeftX - turn, -1, 1);
+        fleftPower = Range.clip((adjustedLeftY + adjustedLeftX + turn) / max, -1, 1);
+        bleftPower = Range.clip((adjustedLeftY - adjustedLeftX + turn) / max, -1, 1);//-turn
+        brightPower = Range.clip((adjustedLeftY + adjustedLeftX - turn) / max, -1, 1);
+        frightPower = Range.clip((adjustedLeftY - adjustedLeftX - turn) / max, -1, 1);//-turn
 
         bleftDrive.setPower(bleftPower);
         brightDrive.setPower(brightPower);
         fleftDrive.setPower(fleftPower);
         frightDrive.setPower(frightPower);
     }
-    public void driveAndStrafeFieldCentricSlow(Gamepad gamepad1, Gamepad gamepad2, Servo scoringServoLeft, Servo scoringServoRight) { //TESTINGGGGG!
+    public void driveAndStrafeFieldCentricSlow(Gamepad gamepad1, Gamepad gamepad2, Servo scoringServoLeft, Servo scoringServoRight, IMU imu, DcMotor scoringLeft,
+                                               DcMotor scoringRight, double Kg) { //TESTINGGGGG!
         while (gamepad1.left_trigger > .1) {
-            strafe = -gamepad1.left_stick_x;
+            turn = gamepad1.right_stick_x;
 
-            double heading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-            double adjustedLeftX = -gamepad1.left_stick_y * Math.sin(heading) + gamepad1.left_stick_x * Math.cos(heading);
-            double adjustedLeftY = gamepad1.left_stick_y * Math.cos(heading) + gamepad1.left_stick_x * Math.sin(heading);
+            double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + 1.5; // 1.5 = offset heading robot starts in after autonomous in RADIANS(90 degrees to left)
+            //make static variable passed from auto into a separate class then into heading for offset since it can vary slightly(or not if no issues)
+            double adjustedLeftX = gamepad1.left_stick_x * Math.cos(-heading) - (-gamepad1.left_stick_y) * Math.sin(-heading) ;
+            double adjustedLeftY = gamepad1.left_stick_x * Math.sin(-heading) + (-gamepad1.left_stick_y) * Math.cos(-heading);
 
+            double max = Math.max(Math.abs(adjustedLeftX) + Math.abs(adjustedLeftY) + Math.abs(turn), 1);
 
-            bleftPower = Range.clip(adjustedLeftY - adjustedLeftX - turn, -.5, .5);
-            brightPower = Range.clip(adjustedLeftY + adjustedLeftX + turn, -.5, .5);
-            fleftPower = Range.clip(adjustedLeftY - adjustedLeftX + turn, -.5, .5);
-            frightPower = Range.clip(adjustedLeftY + adjustedLeftX - turn, -.5, .5);
+            fleftPower = Range.clip((adjustedLeftY + adjustedLeftX + turn) / max, -.5, .5);
+            bleftPower = Range.clip((adjustedLeftY - adjustedLeftX + turn) / max, -.5, .5);//-turn
+            brightPower = Range.clip((adjustedLeftY + adjustedLeftX - turn) / max, -.5, .5);
+            frightPower = Range.clip((adjustedLeftY - adjustedLeftX - turn) / max, -.5, .5);//-turn
 
             clawOperations(scoringServoLeft, scoringServoRight,gamepad2);
+            liftOperations(gamepad2, scoringLeft, scoringRight, Kg);
 
             bleftDrive.setPower(bleftPower);
             brightDrive.setPower(brightPower);

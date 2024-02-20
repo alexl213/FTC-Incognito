@@ -48,7 +48,8 @@ public class DrivingLogic {
         imu.initialize(parameters);
 //        imu.resetYaw();
     }
-    public void driveAndStrafeFieldCentric(Gamepad gamepad1, IMU imu) { //TESTINGGGGGG!
+    public void driveAndStrafeFieldCentric(Gamepad gamepad1, IMU imu, Servo scoringServoLeft, Servo scoringServoRight, Gamepad gamepad2,
+                                           DcMotor scoringLeft, DcMotor scoringRight, double Kg) { //TESTINGGGGGG!
 //        drive1 = -gamepad1.left_stick_y;
         turn = gamepad1.right_stick_x;
 
@@ -60,14 +61,22 @@ public class DrivingLogic {
         double max = Math.max(Math.abs(adjustedLeftX) + Math.abs(adjustedLeftY) + Math.abs(turn), 1);
 
         fleftPower = Range.clip((adjustedLeftY + adjustedLeftX + turn) / max, -1, 1);
+        frightPower = Range.clip((adjustedLeftY - adjustedLeftX - turn) / max, -1, 1);//-turn
         bleftPower = Range.clip((adjustedLeftY - adjustedLeftX + turn) / max, -1, 1);//-turn
         brightPower = Range.clip((adjustedLeftY + adjustedLeftX - turn) / max, -1, 1);
-        frightPower = Range.clip((adjustedLeftY - adjustedLeftX - turn) / max, -1, 1);//-turn
 
-        bleftDrive.setPower(bleftPower);
-        brightDrive.setPower(brightPower);
-        fleftDrive.setPower(fleftPower);
-        frightDrive.setPower(frightPower);
+        double AdjFLP = Math.copySign(Math.pow(fleftPower, 2), fleftPower);
+        double AdjFRP = Math.copySign(Math.pow(frightPower, 2), frightPower);
+        double AdjBLP = Math.copySign(Math.pow(bleftPower, 2), bleftPower);
+        double AdjBRP = Math.copySign(Math.pow(brightPower, 2), brightPower);
+
+        clawOperations(scoringServoLeft, scoringServoRight,gamepad2);
+        liftOperations(gamepad2, scoringLeft, scoringRight, Kg);
+
+        bleftDrive.setPower(AdjBLP);
+        brightDrive.setPower(AdjBRP);
+        fleftDrive.setPower(AdjFLP);
+        frightDrive.setPower(AdjFRP);
     }
     public void driveAndStrafeFieldCentricSlow(Gamepad gamepad1, Gamepad gamepad2, Servo scoringServoLeft, Servo scoringServoRight, IMU imu, DcMotor scoringLeft,
                                                DcMotor scoringRight, double Kg) { //TESTINGGGGG!

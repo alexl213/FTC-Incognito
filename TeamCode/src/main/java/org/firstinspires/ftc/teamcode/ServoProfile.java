@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -21,10 +22,12 @@ public class ServoProfile{
 
 
     double leftPos;
-    public void setServoPathTele(double scoring, DrivingLogic robot, Gamepad gamepad2, Gamepad gamepad1, DcMotor scoringLeft, DcMotor scoringRight, double Kg){
+    public void setServoPathTele(double scoring, DrivingLogic robot, Gamepad gamepad2, Gamepad gamepad1, DcMotor scoringLeft, DcMotor scoringRight, double Kg, IMU imu,
+                                 Servo scoringServoLeft, Servo scoringServoRight){
         leftPos = servoProfile1.get(timer.seconds()).getX();
         scoring = gamepad2.right_stick_y;
-        robot.driveAndStrafe(gamepad1);
+        robot.driveAndStrafeFieldCentric(gamepad1, imu, scoringServoLeft, scoringServoRight, gamepad2, scoringLeft, scoringRight, Kg);
+        robot.driveAndStrafeFieldCentricSlow(gamepad1, gamepad2, scoringServoLeft, scoringServoRight, imu, scoringLeft, scoringRight, Kg);
         robot.liftOperations(gamepad2, scoringLeft, scoringRight, Kg);
         setPositionsSynced(leftPos);
     }

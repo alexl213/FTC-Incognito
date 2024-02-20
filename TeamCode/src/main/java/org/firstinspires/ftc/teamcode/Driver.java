@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.checkerframework.checker.units.qual.K;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 
@@ -37,7 +38,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
         private Servo scoringservoRight = null;
         private DcMotor hangLeft = null;
         private DcMotor hangRight = null;
-
+//        private Servo planeShoot = null;
         private ServoProfile servoProfile = new ServoProfile();
         private DrivingLogic robot = new DrivingLogic(hardwareMap, gamepad1);
         private FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -70,6 +71,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
             scoringservoRight = hardwareMap.get(Servo.class, "scoringRight");
             hangLeft = hardwareMap.get(DcMotor.class, "hang_Left");
             hangRight = hardwareMap.get(DcMotor.class, "hang_Right");
+//            planeShoot = hardwareMap.get(Servo.class, "plane_Shoot");
             robot.driveMotorInit(frightDrive, fleftDrive,bleftDrive,brightDrive);
             imu = hardwareMap.get(IMU.class, "imu");
             robot.fieldCentricDriveInit(imu);
@@ -129,7 +131,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 
 //                robot.driveAndStrafe(gamepad1);
 //                robot.driveAndStrafeSlowTele(gamepad1, gamepad2, scoringservoLeft, scoringservoRight);
-                robot.driveAndStrafeFieldCentric(gamepad1, imu);
+                robot.driveAndStrafeFieldCentric(gamepad1, imu, scoringservoLeft, scoringservoRight, gamepad2, scoringLeft, scoringRight, Kg);
                 robot.driveAndStrafeFieldCentricSlow(gamepad1,gamepad2, scoringservoLeft,scoringservoRight, imu, scoringLeft, scoringRight, Kg);
 
                 intakePower = Range.clip(intake1, -.45, .45);
@@ -198,7 +200,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     runtime.reset();
                     servoProfile.generateProfile(.5, .7, .21, .8);//maxaccel = 0.23, maxvelo = .34(old values)
                      while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive()) {
-                         servoProfile.setServoPathTele(scoring, robot, gamepad2, gamepad1, scoringLeft, scoringRight, Kg);
+                         servoProfile.setServoPathTele(scoring, robot, gamepad2, gamepad1, scoringLeft, scoringRight, Kg, imu, scoringservoLeft, scoringservoRight);
 
                      }
 //yo mama
@@ -221,7 +223,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                      runtime.reset();
                      servoProfile.generateProfile(.5, .65, .8, .21 );
                     while (servoProfile.servoProfile1.get(runtime.seconds()).getX() >= .211111 && opModeIsActive()) {
-                        servoProfile.setServoPathTele(scoring, robot, gamepad2, gamepad1, scoringLeft, scoringRight, Kg);
+                        servoProfile.setServoPathTele(scoring, robot, gamepad2, gamepad1, scoringLeft, scoringRight, Kg, imu, scoringservoLeft, scoringservoRight);
 
                     }
                      armAngle.setPosition(.0);
@@ -298,6 +300,12 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                     scoringservoLeft.setPosition(.1);//0
                 }
 
+//                if (gamepad1.x) {
+//                    planeShoot.setPosition(0);
+//                }
+//                if (gamepad1.y) {
+//                    planeShoot.setPosition(0.25);
+//                }
 
 
 

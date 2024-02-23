@@ -61,6 +61,7 @@ public class GoodAutoTEST extends LinearOpMode {
     private DcMotor hangLeft = null;
     private DcMotor hangRight = null;
 
+
     private OpenCvCamera controlHubCam;  // Use OpenCvCamera class from FTC SDK
     private static final int CAMERA_WIDTH = 1920; // width  of wanted camera resolution
     private static final int CAMERA_HEIGHT = 1080; // height of wanted camera resolution
@@ -81,13 +82,10 @@ public class GoodAutoTEST extends LinearOpMode {
         rightclose5,
         rightclose6,
         rightclose7,
-        rightclose8,
         IDLE
     }
 
-    double waitTime1 = 1.5;
-    double waitTime2 = 0.3;
-    double waitTime3 = 0.5;
+    double waitTime1 = 3;
     ElapsedTime waitTimer1 = new ElapsedTime();
     State currentState = State.IDLE;
 
@@ -118,11 +116,16 @@ public class GoodAutoTEST extends LinearOpMode {
         initOpenCV();
 
         waitForStart();
+        runtime.reset();
 
         while (opModeIsActive()) {
 //            telemetry.addData("Coordinate", "(" + (int) cX + ", " + (int) cY + ")");
 //            telemetry.addData("Distance in Inch", (getDistance(width)));
 //            telemetry.update();
+
+                telemetry.addData("Status", "Wait Time: " + waitTimer1.toString());
+                telemetry.update();
+
 
             SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
             double intakePower;
@@ -162,11 +165,11 @@ public class GoodAutoTEST extends LinearOpMode {
                     .strafeRight(10.0)
                     .splineTo(new Vector2d(30.0, -12.0), Math.toRadians(180.0))
                     .strafeRight(50.0)
-                    .splineTo(new Vector2d(-55.0, -29.0), Math.toRadians(90.0))
+                    .splineTo(new Vector2d(-54.0, -40.0), Math.toRadians(90.0))
                     .build();
             //12.17 seconds arrives at white stacks
             Trajectory rightclose3 = drive.trajectoryBuilder(rightclose22.end())
-                    .forward(5.0)
+                    .forward(8.0)
                     .build();
             Trajectory rightclose4 = drive.trajectoryBuilder(rightclose3.end())
                     .forward(-5.0)
@@ -181,10 +184,7 @@ public class GoodAutoTEST extends LinearOpMode {
                     .forward(-5.0)
                     .splineTo(new Vector2d(-30.0, -12.0), Math.toRadians(0.0))
                     .forward(-50.0)
-                    .splineTo(new Vector2d(52.0, -41.0), Math.toRadians(0.0))
-                    .build();
-            Trajectory rightclose8 = drive.trajectoryBuilder(rightclose7.end())
-                    .strafeLeft(22.0)
+                    .splineTo(new Vector2d(50.0, -43.0), Math.toRadians(0.0))
                     .build();
 
             if (opModeIsActive() && cX > 1450) {
@@ -200,66 +200,66 @@ public class GoodAutoTEST extends LinearOpMode {
                 sleep(100);
                 controlHubCam.stopStreaming();
                 runtime.reset();
+                waitTimer1.reset();
                 drive.followTrajectoryAsync(rightclose1);
                 currentState = State.rightclose1;
 
                 while (opModeIsActive() && !isStopRequested()) {
-                    // Our state machine logic
-                    // You can have multiple switch statements running together for multiple state machines
-                    // in parallel. This is the basic idea for subsystems and commands.
-
-                    // We essentially define the flow of the state machine through this switch statement
-
 
                     switch (currentState) {
                         case rightclose1:
                             if (!drive.isBusy()) {
-                                waitTimer1.reset();
                                 drive.followTrajectoryAsync(rightclose2);
                                 currentState = State.rightclose2;
                                 armAngle.setPosition(.0);
-                                if (waitTimer1.seconds() >= waitTime2) {
-                                    scoringservoLeft.setPosition(.32);
-                                }
-                                if (waitTimer1.seconds() >= waitTime3) {
-                                    scoringservoLeft.setPosition(.05);
-                                    scoringservoRight.setPosition(.32);
-                                }
+                                waitTimer1.reset();
                             }
                             break;
                         case rightclose2:
+
+                            if (waitTimer1.seconds() >= 1.4) {
+                                scoringservoLeft.setPosition(.32);
+                            }
+                            if (waitTimer1.seconds() >= 1.8) {
+                                scoringservoLeft.setPosition(.05);
+                                scoringservoRight.setPosition(.32);
+                            }
+
                             if (!drive.isBusy()) {
-                                waitTimer1.reset();
                                 drive.followTrajectoryAsync(rightclose21);
                                 currentState = State.rightclose21;
                                 armAngle.setPosition(.36);
+                                waitTimer1.reset();
+                            }
+                            break;
+                        case rightclose21:
+
+                            if (waitTimer1.seconds() >= 2.8) {
                                 runtime.reset();
                                 servoProfile.generateProfile(.5, .7, .21, .8);//maxaccel = 0.23, maxvelo = .34
                                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive()) {
                                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive, fleftDrive, frightDrive, intake1,
                                             scoring, gamepad1, gamepad2, robot);
-
+                                    waitTimer1.reset();
                                 }
                             }
-                            break;
-                        case rightclose21:
+
                             if (!drive.isBusy()) {
                                 currentState = State.wait1;
-                                waitTimer1.reset();
                                 scoringservoRight.setPosition(.05);
-                                if (waitTimer1.seconds() >= waitTime2) {
-                                    scoringservoLeft.setPosition(.05);
-                                    scoringservoRight.setPosition(.32);
-                                    runtime.reset();
-                                    servoProfile.generateProfile(.5, .7, .8, .21);
-                                    while (servoProfile.servoProfile1.get(runtime.seconds()).getX() >= .21111 && opModeIsActive()) {
-                                        servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                                                ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
-                                    }
-                                }
+                                waitTimer1.reset();
                             }
                             break;
                         case wait1:
+                                scoringservoLeft.setPosition(.05);
+                                scoringservoRight.setPosition(.32);
+                                runtime.reset();
+                                servoProfile.generateProfile(.5, .7, .8, .21);
+                                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() >= .21111 && opModeIsActive()) {
+                                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
+                                            ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
+                                }
+
                             if (waitTimer1.seconds() >= waitTime1) {
                                 drive.followTrajectoryAsync(rightclose22);
                                 currentState = State.rightclose22;
@@ -303,14 +303,9 @@ public class GoodAutoTEST extends LinearOpMode {
                             break;
                         case wait2:
                             if (waitTimer1.seconds() >= waitTime1) {
-                                drive.followTrajectoryAsync(rightclose8);
-                                currentState = State.rightclose8;
-                            }
-                            break;
-                        case rightclose8:
-                            if (!drive.isBusy()) {
                                 currentState = State.IDLE;
                             }
+                            break;
                         case IDLE:
                             break;
                     }

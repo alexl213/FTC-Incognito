@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -38,11 +39,12 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
         private Servo scoringservoRight = null;
         private DcMotor hangLeft = null;
         private DcMotor hangRight = null;
-//        private Servo planeShoot = null;
+        private Servo planeShoot = null;
         private ServoProfile servoProfile = new ServoProfile();
         private DrivingLogic robot = new DrivingLogic(hardwareMap, gamepad1);
         private FtcDashboard dashboard = FtcDashboard.getInstance();
         private Telemetry dashboardTelemetry = dashboard.getTelemetry();
+        private RevBlinkinLedDriver clawLED;
         private MecanumDrive mecanumDrive;
         IMU imu;//dont remember if this is correct IMU name
 
@@ -71,10 +73,11 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
             scoringservoRight = hardwareMap.get(Servo.class, "scoringRight");
             hangLeft = hardwareMap.get(DcMotor.class, "hang_Left");
             hangRight = hardwareMap.get(DcMotor.class, "hang_Right");
-//            planeShoot = hardwareMap.get(Servo.class, "plane_Shoot");
+            planeShoot = hardwareMap.get(Servo.class, "plane_Shoot");
             robot.driveMotorInit(frightDrive, fleftDrive,bleftDrive,brightDrive);
             imu = hardwareMap.get(IMU.class, "imu");
             robot.fieldCentricDriveInit(imu);
+            clawLED = hardwareMap.get(RevBlinkinLedDriver.class, "clawLED");
 
 
 
@@ -288,24 +291,28 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 
                 if (gamepad2.right_bumper) {
                     scoringservoRight.setPosition(.1);//0
+                    clawLED.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
                 }
                 if (gamepad2.right_trigger > 0.2) {
                     scoringservoRight.setPosition(.3);//.55
+                    clawLED.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
                 }
 
                 if (gamepad2.left_bumper) {
                     scoringservoLeft.setPosition(.3);//.55
+                    clawLED.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
                 }
                 if (gamepad2.left_trigger > 0.2) {
                     scoringservoLeft.setPosition(.1);//0
+                    clawLED.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
                 }
 
-//                if (gamepad1.x) {
-//                    planeShoot.setPosition(0);
-//                }
-//                if (gamepad1.y) {
-//                    planeShoot.setPosition(0.25);
-//                }
+                if (gamepad1.x) {
+                    planeShoot.setPosition(0);
+                }
+                if (gamepad1.y) {
+                    planeShoot.setPosition(0.25);
+                }
 
 
 

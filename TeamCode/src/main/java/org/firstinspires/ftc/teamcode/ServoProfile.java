@@ -27,7 +27,7 @@ public class ServoProfile{
         leftPos = servoProfile1.get(timer.seconds()).getX();
         scoring = gamepad2.right_stick_y;
         robot.driveAndStrafeFieldCentric(gamepad1, imu, scoringServoLeft, scoringServoRight, gamepad2, scoringLeft, scoringRight, Kg);
-        robot.driveAndStrafeFieldCentricSlow(gamepad1, gamepad2, scoringServoLeft, scoringServoRight, imu, scoringLeft, scoringRight, Kg);
+        //robot.driveAndStrafeFieldCentricSlow(gamepad1, gamepad2, scoringServoLeft, scoringServoRight, imu, scoringLeft, scoringRight, Kg);
         robot.liftOperations(gamepad2, scoringLeft, scoringRight, Kg);
         setPositionsSynced(leftPos);
     }

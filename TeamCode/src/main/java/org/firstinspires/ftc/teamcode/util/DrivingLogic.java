@@ -78,6 +78,31 @@ public class DrivingLogic {
         fleftDrive.setPower(AdjFLP);
         frightDrive.setPower(AdjFRP);
     }
+    public void fieldCentricOnly(IMU imu, Gamepad gamepad1){
+        turn = gamepad1.right_stick_x;
+
+        double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + 1.5; // 1.5 = offset heading robot starts in after autonomous in RADIANS(90 degrees to left)
+        //make static variable passed from auto into a separate class then into heading for offset since it can vary slightly(or not if no issues)
+        double adjustedLeftX = gamepad1.left_stick_x * Math.cos(-heading) - (-gamepad1.left_stick_y) * Math.sin(-heading) ;
+        double adjustedLeftY = gamepad1.left_stick_x * Math.sin(-heading) + (-gamepad1.left_stick_y) * Math.cos(-heading);
+
+        double max = Math.max(Math.abs(adjustedLeftX) + Math.abs(adjustedLeftY) + Math.abs(turn), 1);
+
+        fleftPower = Range.clip((adjustedLeftY + adjustedLeftX + turn) / max, -1, 1);
+        frightPower = Range.clip((adjustedLeftY - adjustedLeftX - turn) / max, -1, 1);//-turn
+        bleftPower = Range.clip((adjustedLeftY - adjustedLeftX + turn) / max, -1, 1);//-turn
+        brightPower = Range.clip((adjustedLeftY + adjustedLeftX - turn) / max, -1, 1);
+
+        double AdjFLP = Math.copySign(Math.pow(fleftPower, 2), fleftPower);
+        double AdjFRP = Math.copySign(Math.pow(frightPower, 2), frightPower);
+        double AdjBLP = Math.copySign(Math.pow(bleftPower, 2), bleftPower);
+        double AdjBRP = Math.copySign(Math.pow(brightPower, 2), brightPower);
+
+        bleftDrive.setPower(AdjBLP);
+        brightDrive.setPower(AdjBRP);
+        fleftDrive.setPower(AdjFLP);
+        frightDrive.setPower(AdjFRP);
+    }
     public void driveAndStrafeFieldCentricSlow(Gamepad gamepad1, Gamepad gamepad2, Servo scoringServoLeft, Servo scoringServoRight, IMU imu, DcMotor scoringLeft,
                                                DcMotor scoringRight, double Kg) { //TESTINGGGGG!
         while (gamepad1.left_trigger > .1) {

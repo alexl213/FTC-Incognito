@@ -236,7 +236,7 @@ public class GoodAutoTEST extends LinearOpMode {
 
                             if (waitTimer1.seconds() >= 2.8) {
                                 runtime.reset();
-                                servoProfile.generateProfile(.5, .7, .21, .8);//maxaccel = 0.23, maxvelo = .34
+                                servoProfile.generateProfile(.7, .8, .21, .8);//maxaccel = 0.23, maxvelo = .34
                                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive()) {
                                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive, fleftDrive, frightDrive, intake1,
                                             scoring, gamepad1, gamepad2, robot);

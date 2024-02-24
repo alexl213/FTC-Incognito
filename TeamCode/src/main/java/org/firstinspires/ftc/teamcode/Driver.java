@@ -89,6 +89,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
             brightDrive.setDirection(DcMotor.Direction.FORWARD);
             fleftDrive.setDirection(DcMotor.Direction.REVERSE);
             frightDrive.setDirection(DcMotor.Direction.REVERSE);
+            planeShoot.setDirection(Servo.Direction.REVERSE);
 
             //intake.setDirection(DcMotor.Direction.FORWARD);
             scoringLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -135,7 +136,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 //                robot.driveAndStrafe(gamepad1);
 //                robot.driveAndStrafeSlowTele(gamepad1, gamepad2, scoringservoLeft, scoringservoRight);
                 robot.driveAndStrafeFieldCentric(gamepad1, imu, scoringservoLeft, scoringservoRight, gamepad2, scoringLeft, scoringRight, Kg);
-                robot.driveAndStrafeFieldCentricSlow(gamepad1,gamepad2, scoringservoLeft,scoringservoRight, imu, scoringLeft, scoringRight, Kg);
+                //robot.driveAndStrafeFieldCentricSlow(gamepad1,gamepad2, scoringservoLeft,scoringservoRight, imu, scoringLeft, scoringRight, Kg);
 
                 intakePower = Range.clip(intake1, -.45, .45);
                 scoringleftPower = Range.clip(scoring, -0.65, 0.1);
@@ -178,7 +179,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 //                dashboardTelemetry.update();
 
                 if (gamepad2.y){ //hanging position going up to grab on to pole
-                    hangLeft.setTargetPosition(-1855);
+                    hangLeft.setTargetPosition(-1845);//-1855
                     hangRight.setTargetPosition(1828);
                     hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -308,10 +309,10 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                 }
 
                 if (gamepad1.x) {
-                    planeShoot.setPosition(0);
+                    planeShoot.setPosition(.3375);//shoot
                 }
                 if (gamepad1.y) {
-                    planeShoot.setPosition(0.25);
+                    planeShoot.setPosition(.8);//zero
                 }
 
 
@@ -324,10 +325,10 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                 // Show the elapsed game time and wheel power.
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
                 //telemetry.addData("Motors", "bleftDrive (%100f), brightDrive (%100f)", bleftPower, brightPower);
-//                telemetry.addData("Set Position Left: ", hangLeft.getCurrentPosition());
-//                telemetry.addData("Set Position Right: ", hangRight.getCurrentPosition());
-                telemetry.addData("Set Position Left: ", scoringLeft.getCurrentPosition());//20
-                telemetry.addData("Set Position Right: ", scoringRight.getCurrentPosition());//negative
+                telemetry.addData("Set Position Left: ", hangLeft.getCurrentPosition());
+                telemetry.addData("Set Position Right: ", hangRight.getCurrentPosition());
+                //telemetry.addData("Set Position Left: ", scoringLeft.getCurrentPosition());//20
+                //telemetry.addData("Set Position Right: ", scoringRight.getCurrentPosition());//negative
                 telemetry.update();
 
             }

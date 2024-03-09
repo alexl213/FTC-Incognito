@@ -111,22 +111,40 @@ public class AutoBlueFarSpike extends LinearOpMode {
             scoringleftPower = Range.clip(scoring, -0.65, 0.1);
             scoringrightPower = Range.clip(scoring, -0.65, 0.1);
 
-            Pose2d startPose = new Pose2d(-36.0, 63, Math.toRadians(90));
+            Pose2d startPose = new Pose2d(-36.0, 63.0, Math.toRadians(90.0));
+            Pose2d rightPose = new Pose2d(-36, 37, Math.toRadians(180.0));
+            Pose2d leftPose = new Pose2d(-36, 31, Math.toRadians(0.0));
+            Pose2d forwardPose = new Pose2d(-36, 37, Math.toRadians(-90));
 
             drive.setPoseEstimate(startPose);
 
-        Trajectory farright1 = drive.trajectoryBuilder(startPose)
-                .forward(-21.0)
-                .splineTo(new Vector2d(-39.0,32.0), Math.toRadians(0.0))
-                .build();
-        Trajectory farleft1 = drive.trajectoryBuilder(startPose)
-            .forward(-20.0)
-            .splineTo(new Vector2d(-33.0,36.0), Math.toRadians(180.0))
-            .build();
-        Trajectory farforward1 = drive.trajectoryBuilder(startPose)
-            .forward(-47.0)
-            .build();
-
+            Trajectory farright1 = drive.trajectoryBuilder(startPose)
+                    .forward(-26.0)
+                    .build();
+            Trajectory farright2 = drive.trajectoryBuilder(rightPose)
+                    .forward(3.5)
+                    .build();
+            Trajectory farright3 = drive.trajectoryBuilder(farright2.end())
+                    .forward(-3.5)
+                    .build();
+            Trajectory farleft1 = drive.trajectoryBuilder(startPose)
+                    .forward(-32.0)
+                    .build();
+            Trajectory farleft2 = drive.trajectoryBuilder(leftPose)
+                    .forward(3.5)
+                    .build();
+            Trajectory farleft3 = drive.trajectoryBuilder(farleft2.end())
+                    .forward(-3.5)
+                    .build();
+            Trajectory farforward1 = drive.trajectoryBuilder(startPose)
+                    .forward(-28.0)
+                    .build();
+            Trajectory farforward2 = drive.trajectoryBuilder(forwardPose)
+                    .forward(4.5)
+                    .build();
+            Trajectory farforward3 = drive.trajectoryBuilder(farforward2.end())
+                    .forward(-3.5)
+                    .build();
 
             if (opModeIsActive() && cX > 1350) {
                 telemetry.addData("Location: ", "Right");
@@ -140,14 +158,16 @@ public class AutoBlueFarSpike extends LinearOpMode {
                 sleep(500);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(farright1);
+                drive.turn(Math.toRadians(90));
+                drive.followTrajectory(farright2);
                 armAngle.setPosition(.0);
                 sleep(300);
                 scoringservoLeft.setPosition(.32);
                 sleep(300);
+                drive.followTrajectory(farright3);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
                 sleep(100000000);
-
             }
             if (opModeIsActive() && cX < 550) {
                 telemetry.addData("Location: ", "Left");
@@ -161,14 +181,16 @@ public class AutoBlueFarSpike extends LinearOpMode {
                 sleep(500);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(farleft1);
+                drive.turn(Math.toRadians(-90));
+                drive.followTrajectory(farleft2);
                 armAngle.setPosition(.0);
                 sleep(300);
                 scoringservoLeft.setPosition(.32);
                 sleep(300);
+                drive.followTrajectory(farleft3);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
                 sleep(100000000);
-
             }
             if (opModeIsActive() && cX < 1350 && cX > 550) {
                 telemetry.addData("Location: ", "Center");
@@ -182,10 +204,13 @@ public class AutoBlueFarSpike extends LinearOpMode {
                 sleep(500);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(farforward1);
+                drive.turn(Math.toRadians(180));
+                drive.followTrajectory(farforward2);
                 armAngle.setPosition(.0);
                 sleep(300);
                 scoringservoLeft.setPosition(.32);
                 sleep(300);
+                drive.followTrajectory(farforward3);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
                 sleep(100000000);

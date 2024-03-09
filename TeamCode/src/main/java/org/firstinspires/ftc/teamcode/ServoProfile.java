@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
@@ -9,6 +10,13 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import org.firstinspires.ftc.teamcode.ZDoNotUseGood2;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 
@@ -19,7 +27,6 @@ public class ServoProfile{
 
     public MotionProfile servoProfile1;
     public ElapsedTime timer = new ElapsedTime();
-
 
     double leftPos;
     public void setServoPathTele(double scoring, DrivingLogic robot, Gamepad gamepad2, Gamepad gamepad1, DcMotor scoringLeft, DcMotor scoringRight, double Kg, IMU imu,
@@ -50,6 +57,40 @@ public class ServoProfile{
         //robot.driveAndStrafeSlow(gamepad1,gamepad2, );cannot drive slow while moving arm up or down
         setPositionsSynced(leftPos);
 
+
+
+    }
+    public void setServoPathAuto( double intakePower, double scoringleftPower,
+                              double scoringrightPower, DcMotor bleftDrive, DcMotor brightDrive, DcMotor fleftDrive,
+                              DcMotor frightDrive, double intake1, double scoring, Gamepad gamepad1, Gamepad gamepad2, DrivingLogic robot){
+
+        leftPos = servoProfile1.get(timer.seconds()).getX();
+
+
+        intake1 = gamepad2.left_stick_x;
+        scoring = gamepad2.right_stick_y;
+        intakePower = Range.clip(intake1, -.45, .45);
+        scoringleftPower = Range.clip(scoring, -0.65, 0.1);
+        scoringrightPower = Range.clip(scoring, -0.65, 0.1);
+
+
+        robot.driveAndStrafe(gamepad1);
+        //robot.driveAndStrafeSlow(gamepad1,gamepad2, );cannot drive slow while moving arm up or down
+        setPositionsSynced(leftPos);
+
+
+        Trajectory arightclose1;
+        Trajectory arightclose2;
+        Trajectory arightclose21;
+        Trajectory arightclose22;
+        Trajectory arightclose23;
+        Trajectory arightclose3;
+        Trajectory arightclose4;
+        Trajectory arightclose5;
+        Trajectory arightclose6;
+        Trajectory arightclose61;
+        Trajectory arightclose62;
+        Trajectory arightclose7;
 
 
     }

@@ -132,7 +132,9 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
                 double scoring = Math.copySign(Math.pow(gamepad2.right_stick_y, 2), gamepad2.right_stick_y);
 
                 servoProfile.initServos(axonLeft, axonRight);
-
+                if(gamepad1.start){
+                    robot.fieldCentricDriveInit(imu);
+                }
 //                robot.driveAndStrafe(gamepad1);
 //                robot.driveAndStrafeSlowTele(gamepad1, gamepad2, scoringservoLeft, scoringservoRight);
                 robot.driveAndStrafeFieldCentric(gamepad1, imu, scoringservoLeft, scoringservoRight, gamepad2, scoringLeft, scoringRight, Kg);
@@ -179,7 +181,7 @@ import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 //                dashboardTelemetry.update();
 
                 if (gamepad2.y){ //hanging position going up to grab on to pole
-                    hangLeft.setTargetPosition(-1845);//-1855
+                    hangLeft.setTargetPosition(-1900);//-1845
                     hangRight.setTargetPosition(1828);
                     hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);

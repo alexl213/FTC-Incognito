@@ -172,7 +172,7 @@ public class AutoBlueClose extends LinearOpMode {
                 Servo armAngle = null;
                 armAngle = hardwareMap.get(Servo.class, "armAngle");
                 armAngle.setPosition(.36);
-                sleep(500);
+                sleep(100);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(closeright1);
                 armAngle.setPosition(.0);
@@ -186,23 +186,23 @@ public class AutoBlueClose extends LinearOpMode {
                 drive.followTrajectory(closeright2);
                 drive.followTrajectory(closeright3);
                 runtime.reset();
-                servoProfile.generateProfile(.5, .7, .21, .8);
+                servoProfile.generateProfile(.7, .8, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
                 scoringservoRight.setPosition(.05);
-                sleep(300);
+                sleep(200);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
-                sleep(500);
+                sleep(100);
                 runtime.reset();
-                servoProfile.generateProfile(.5, .7, .8, .21);
+                servoProfile.generateProfile(.7, .8, .8, .21);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() >= .21999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
-                sleep(500);
+                sleep(100);
                 drive.followTrajectory(closeright4);
                 sleep(100000000);
 
@@ -216,7 +216,7 @@ public class AutoBlueClose extends LinearOpMode {
                 Servo armAngle = null;
                 armAngle = hardwareMap.get(Servo.class, "armAngle");
                 armAngle.setPosition(.36);
-                sleep(500);
+                sleep(100);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(closeleft1);
                 armAngle.setPosition(.0);
@@ -231,23 +231,23 @@ public class AutoBlueClose extends LinearOpMode {
                 drive.followTrajectory(closeleft3);
                 drive.followTrajectory(closeleft4);
                 runtime.reset();
-                servoProfile.generateProfile(0.5, 0.7, .21, .8);
+                servoProfile.generateProfile(0.7, 0.8, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
                 scoringservoRight.setPosition(.05);
-                sleep(300);
+                sleep(200);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
-                sleep(500);
+                sleep(100);
                 runtime.reset();
-                servoProfile.generateProfile(.5, .7, .8, .21);
+                servoProfile.generateProfile(.7, .8, .8, .21);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() >= .21999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
-                sleep(500);
+                sleep(100);
                 drive.followTrajectory(closeleft5);
                 sleep(100000000);
 
@@ -261,7 +261,7 @@ public class AutoBlueClose extends LinearOpMode {
                 Servo armAngle = null;
                 armAngle = hardwareMap.get(Servo.class, "armAngle");
                 armAngle.setPosition(.36);
-                sleep(500);
+                sleep(100);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(closeforward1);
                 armAngle.setPosition(.0);
@@ -275,23 +275,23 @@ public class AutoBlueClose extends LinearOpMode {
                 drive.followTrajectory(closeforward2);
                 drive.followTrajectory(closeforward3);
                 runtime.reset();
-                servoProfile.generateProfile(.5, .7, .21, .8);
+                servoProfile.generateProfile(.7, .8, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
                 scoringservoRight.setPosition(.05);
-                sleep(300);
+                sleep(200);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
-                sleep(500);
+                sleep(100);
                 runtime.reset();
-                servoProfile.generateProfile(.5, .7, .8, .21);
+                servoProfile.generateProfile(.7, .8, .8, .21);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() >= .21999 && opModeIsActive() || runtime.seconds() < 1.5 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
                 }
-                sleep(500);
+                sleep(100);
                 drive.followTrajectory(closeforward4);
                 sleep(100000000);
 

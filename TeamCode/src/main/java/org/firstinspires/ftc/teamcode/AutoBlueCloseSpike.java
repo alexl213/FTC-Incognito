@@ -112,21 +112,38 @@ public class AutoBlueCloseSpike extends LinearOpMode {
             scoringrightPower = Range.clip(scoring, -0.65, 0.1);
 
             Pose2d startPose = new Pose2d(12.0, 63.0, Math.toRadians(90.0));
+            Pose2d rightPose = new Pose2d(12, 37, Math.toRadians(180.0));
+            Pose2d leftPose = new Pose2d(12, 33, Math.toRadians(0.0));
+            Pose2d forwardPose = new Pose2d(12, 37, Math.toRadians(-90));
 
             drive.setPoseEstimate(startPose);
 
             Trajectory closeright1 = drive.trajectoryBuilder(startPose)
-                    .forward(-21.0)
-                    .splineTo(new Vector2d(9.0,32.0), Math.toRadians(0.0))
+                    .forward(-26.0)
+                    .build();
+            Trajectory closeright2 = drive.trajectoryBuilder(rightPose)
+                    .forward(3.5)
+                    .build();
+            Trajectory closeright3 = drive.trajectoryBuilder(closeright2.end())
+                    .forward(-3.5)
                     .build();
             Trajectory closeleft1 = drive.trajectoryBuilder(startPose)
-                    .forward(-20.0)
-                    .splineTo(new Vector2d(15.0,36.0), Math.toRadians(180.0))
+                    .forward(-32.0)
+                    .build();
+            Trajectory closeleft2 = drive.trajectoryBuilder(leftPose)
+                    .forward(3.5)
+                    .build();
+            Trajectory closeleft3 = drive.trajectoryBuilder(closeleft2.end())
+                    .forward(-3.5)
                     .build();
             Trajectory closeforward1 = drive.trajectoryBuilder(startPose)
-                    .forward(-5.0)
-                    .splineTo(new Vector2d(16.0, 42.0), Math.toRadians(-90.0))
-                    .splineTo(new Vector2d(12.0,33.0), Math.toRadians(90.0))
+                    .forward(-28.0)
+                    .build();
+            Trajectory closeforward2 = drive.trajectoryBuilder(forwardPose)
+                    .forward(4.5)
+                    .build();
+            Trajectory closeforward3 = drive.trajectoryBuilder(closeforward2.end())
+                    .forward(-4.5)
                     .build();
 
             if (opModeIsActive() && cX > 1350) {
@@ -141,14 +158,16 @@ public class AutoBlueCloseSpike extends LinearOpMode {
                 sleep(500);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(closeright1);
+                drive.turn(Math.toRadians(90));
+                drive.followTrajectory(closeright2);
                 armAngle.setPosition(.0);
                 sleep(300);
                 scoringservoLeft.setPosition(.32);
                 sleep(300);
+                drive.followTrajectory(closeright3);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
                 sleep(100000000);
-
             }
             if (opModeIsActive() && cX < 550) {
                 telemetry.addData("Location: ", "Left");
@@ -162,16 +181,18 @@ public class AutoBlueCloseSpike extends LinearOpMode {
                 sleep(500);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(closeleft1);
+                drive.turn(Math.toRadians(-90));
+                drive.followTrajectory(closeleft2);
                 armAngle.setPosition(.0);
                 sleep(300);
                 scoringservoLeft.setPosition(.32);
                 sleep(300);
+                drive.followTrajectory(closeleft3);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
                 sleep(100000000);
-
             }
-            if (opModeIsActive() && cX < 1350 && cX > 400) {
+            if (opModeIsActive() && cX < 1350 && cX > 550) {
                 telemetry.addData("Location: ", "Center");
                 telemetry.update();
                 servoProfile.initServos(axonLeft, axonRight);
@@ -183,10 +204,13 @@ public class AutoBlueCloseSpike extends LinearOpMode {
                 sleep(500);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(closeforward1);
+                drive.turn(Math.toRadians(180));
+                drive.followTrajectory(closeforward2);
                 armAngle.setPosition(.0);
                 sleep(300);
                 scoringservoLeft.setPosition(.32);
                 sleep(300);
+                drive.followTrajectory(closeforward3);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
                 sleep(100000000);

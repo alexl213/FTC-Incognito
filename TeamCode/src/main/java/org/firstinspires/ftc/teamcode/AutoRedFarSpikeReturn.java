@@ -3,19 +3,16 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.ServoProfile;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.DrivingLogic;
 import org.opencv.core.Core;
@@ -35,9 +32,9 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "AutoRedFar")
+@Autonomous(name = "AutoRedFarSpikeReturn")
 
-public class AutoRedFar extends LinearOpMode {
+public class AutoRedFarSpikeReturn extends LinearOpMode {
 
     public ServoProfile servoProfile = new ServoProfile();
     public DrivingLogic robot = new DrivingLogic(hardwareMap, gamepad1);
@@ -115,52 +112,45 @@ public class AutoRedFar extends LinearOpMode {
             SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
             Pose2d startPose = new Pose2d(-36, -63, Math.toRadians(-90));
+            Pose2d rightPose = new Pose2d(-36, -37, Math.toRadians(0.0));
+            Pose2d leftPose = new Pose2d(-36, -31, Math.toRadians(180.0));
+            Pose2d forwardPose = new Pose2d(-36, -37, Math.toRadians(90));
 
             drive.setPoseEstimate(startPose);
 
         Trajectory farright1 = drive.trajectoryBuilder(startPose)
-            .forward(-20.0)
-            .splineTo(new Vector2d(-33.0,-36.0), Math.toRadians(180.0))
+            .forward(-26.0)
             .build();
-        Trajectory farright2 = drive.trajectoryBuilder(farright1.end())
-            .forward(-3.0)
+        Trajectory farright2 = drive.trajectoryBuilder(rightPose)
+                .forward(3.5)
             .build();
         Trajectory farright3 = drive.trajectoryBuilder(farright2.end())
-            .strafeLeft(8.0)
-                .splineTo(new Vector2d(40.0, -44.5), Math.toRadians(-90.0))
-            .build();
+                .forward(-3.5)
+                .build();
         Trajectory farright4 = drive.trajectoryBuilder(farright3.end())
-            .forward(-12.0)
-            .build();
+                .strafeRight(26.0)
+                .build();
         Trajectory farleft1 = drive.trajectoryBuilder(startPose)
-            .forward(-21.0)
-            .splineTo(new Vector2d(-39.0,-32.0), Math.toRadians(0.0))
+            .forward(-32.0)
             .build();
-        Trajectory farleft2 = drive.trajectoryBuilder(farleft1.end())
-            .forward(-3.0)
-            .build();
+        Trajectory farleft2 = drive.trajectoryBuilder(leftPose)
+                .forward(3.5)
+                .build();
         Trajectory farleft3 = drive.trajectoryBuilder(farleft2.end())
-                .strafeRight(8.0)
-                .splineTo(new Vector2d(-20.0, -12.0), Math.toRadians(0.0))
-                .strafeRight(30.0)
-                .splineTo(new Vector2d(40.0, -34.0), Math.toRadians(90.0))
+                .forward(-3.5)
                 .build();
         Trajectory farleft4 = drive.trajectoryBuilder(farleft3.end())
-                .forward(-12.0)
+                .strafeLeft(26)
                 .build();
         Trajectory farforward1 = drive.trajectoryBuilder(startPose)
-            .forward(-47.0)
+            .forward(-26.0)
             .build();
-        Trajectory farforward2 = drive.trajectoryBuilder(farforward1.end())
-            .forward(-4.0)
+        Trajectory farforward2 = drive.trajectoryBuilder(forwardPose)
+                .forward(4.5)
                 .build();
         Trajectory farforward3 = drive.trajectoryBuilder(farforward2.end())
-                .strafeLeft(35.0)
-            .splineTo(new Vector2d(40.0, -38.0), Math.toRadians(90.0))
-            .build();
-        Trajectory farforward4 = drive.trajectoryBuilder(farforward3.end())
-            .forward(-12.0)
-            .build();
+                .forward(-30)
+                .build();
 
             if (opModeIsActive() && cX > 1350) {
                 telemetry.addData("Location: ", "Right");
@@ -171,37 +161,19 @@ public class AutoRedFar extends LinearOpMode {
                 Servo armAngle = null;
                 armAngle = hardwareMap.get(Servo.class, "armAngle");
                 armAngle.setPosition(.36);
-                sleep(100);
+                sleep(500);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(farright1);
+                drive.turn(Math.toRadians(90));
+                drive.followTrajectory(farright2);
                 armAngle.setPosition(.0);
                 sleep(300);
                 scoringservoLeft.setPosition(.32);
-                sleep(300);
-                scoringservoLeft.setPosition(.05);
-                scoringservoRight.setPosition(.32);
-                armAngle.setPosition(.36);
-                sleep(8000);
-                drive.followTrajectory(farright2);
                 drive.followTrajectory(farright3);
-                drive.followTrajectory(farright4);
-                runtime.reset();
-                servoProfile.generateProfile(.5, .6, .21, .8);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
-                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                            , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
-                }
-                scoringservoRight.setPosition(.05);
-                sleep(300);
+                armAngle.setPosition(.36);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
-                sleep(200);
-                runtime.reset();
-                servoProfile.generateProfile(.5, .6, .8, .21);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
-                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                            ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
-                }
+                drive.followTrajectory(farright4);
                 sleep(100000000);
             }
             if (opModeIsActive() && cX < 550) {
@@ -213,37 +185,19 @@ public class AutoRedFar extends LinearOpMode {
                 Servo armAngle = null;
                 armAngle = hardwareMap.get(Servo.class, "armAngle");
                 armAngle.setPosition(.36);
-                sleep(100);
+                sleep(500);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(farleft1);
+                drive.turn(Math.toRadians(-90));
+                drive.followTrajectory(farleft2);
                 armAngle.setPosition(.0);
                 sleep(300);
                 scoringservoLeft.setPosition(.32);
-                sleep(300);
-                scoringservoLeft.setPosition(.05);
-                scoringservoRight.setPosition(.32);
-                armAngle.setPosition(.36);
-                sleep(8000);
-                drive.followTrajectory(farleft2);
                 drive.followTrajectory(farleft3);
-                drive.followTrajectory(farleft4);
-                runtime.reset();
-                servoProfile.generateProfile(.5, .6, .21, .8);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
-                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                            , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
-                }
-                scoringservoRight.setPosition(.05);
-                sleep(300);
+                armAngle.setPosition(.36);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
-                sleep(200);
-                runtime.reset();
-                servoProfile.generateProfile(.5, .6, .8, .21);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
-                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                            ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
-                }
+                drive.followTrajectory(farleft4);
                 sleep(100000000);
             }
             if (opModeIsActive() && cX < 1350 && cX > 550) {
@@ -255,37 +209,19 @@ public class AutoRedFar extends LinearOpMode {
                 Servo armAngle = null;
                 armAngle = hardwareMap.get(Servo.class, "armAngle");
                 armAngle.setPosition(.36);
-                sleep(100);
+                sleep(500);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(farforward1);
+                drive.turn(Math.toRadians(180));
+                drive.followTrajectory(farforward2);
                 armAngle.setPosition(.0);
                 sleep(300);
                 scoringservoLeft.setPosition(.32);
                 sleep(300);
-                scoringservoLeft.setPosition(.05);
-                scoringservoRight.setPosition(.32);
                 armAngle.setPosition(.36);
-                sleep(8000);
-                drive.followTrajectory(farforward2);
-                drive.followTrajectory(farforward3);
-                drive.followTrajectory(farforward4);
-                runtime.reset();
-                servoProfile.generateProfile(.5, .6, .21, .8);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
-                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                            , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
-                }
-                scoringservoRight.setPosition(.05);
-                sleep(300);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
-                sleep(200);
-                runtime.reset();
-                servoProfile.generateProfile(.5, .6, .8, .21);
-                while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
-                    servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
-                            ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
-                }
+                drive.followTrajectory(farforward3);
                 sleep(100000000);
 
             }

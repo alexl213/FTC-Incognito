@@ -55,8 +55,8 @@ public class DrivingLogic {
 
         double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + 1.5; // 1.5 = offset heading robot starts in after autonomous in RADIANS(90 degrees to left)
         //make static variable passed from auto into a separate class then into heading for offset since it can vary slightly(or not if no issues)
-        double adjustedLeftX = gamepad1.left_stick_x * Math.cos(-heading) - (-gamepad1.left_stick_y) * Math.sin(-heading) ;
-        double adjustedLeftY = gamepad1.left_stick_x * Math.sin(-heading) + (-gamepad1.left_stick_y) * Math.cos(-heading);
+        double adjustedLeftX = gamepad1.left_stick_x * Math.cos(-heading) - (-gamepad1.left_stick_y) * Math.sin(-heading) ;//-y,x for red
+        double adjustedLeftY = gamepad1.left_stick_x * Math.sin(-heading) + (-gamepad1.left_stick_y) * Math.cos(-heading);//-y,x for red
 
         double max = Math.max(Math.abs(adjustedLeftX) + Math.abs(adjustedLeftY) + Math.abs(turn), 1);
 
@@ -82,6 +82,7 @@ public class DrivingLogic {
         turn = gamepad1.right_stick_x;
 
         double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + 1.5; // 1.5 = offset heading robot starts in after autonomous in RADIANS(90 degrees to left)
+        //0 = robot claw facing forward, 1.5 = robot claw facing left, 3.14 = claw facing backward, 6.28 = claw facing right
         //make static variable passed from auto into a separate class then into heading for offset since it can vary slightly(or not if no issues)
         double adjustedLeftX = gamepad1.left_stick_x * Math.cos(-heading) - (-gamepad1.left_stick_y) * Math.sin(-heading) ;
         double adjustedLeftY = gamepad1.left_stick_x * Math.sin(-heading) + (-gamepad1.left_stick_y) * Math.cos(-heading);

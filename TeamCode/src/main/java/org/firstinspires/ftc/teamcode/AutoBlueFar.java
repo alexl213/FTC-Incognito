@@ -171,7 +171,7 @@ public class AutoBlueFar extends LinearOpMode {
                 Servo armAngle = null;
                 armAngle = hardwareMap.get(Servo.class, "armAngle");
                 armAngle.setPosition(.36);
-                sleep(500);
+                sleep(100);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(farright1);
                 armAngle.setPosition(.0);
@@ -181,12 +181,12 @@ public class AutoBlueFar extends LinearOpMode {
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
                 armAngle.setPosition(.36);
-                sleep(4000);
+                sleep(8000);
                 drive.followTrajectory(farright2);
                 drive.followTrajectory(farright3);
                 drive.followTrajectory(farright4);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .21, .8);
+                servoProfile.generateProfile(.5, .6, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
@@ -195,9 +195,9 @@ public class AutoBlueFar extends LinearOpMode {
                 sleep(300);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
-                sleep(500);
+                sleep(200);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .8, .21);
+                servoProfile.generateProfile(.5, .6, .8, .21);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
@@ -214,7 +214,7 @@ public class AutoBlueFar extends LinearOpMode {
                 Servo armAngle = null;
                 armAngle = hardwareMap.get(Servo.class, "armAngle");
                 armAngle.setPosition(.36);
-                sleep(500);
+                sleep(100);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(farleft1);
                 armAngle.setPosition(.0);
@@ -224,12 +224,12 @@ public class AutoBlueFar extends LinearOpMode {
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
                 armAngle.setPosition(.36);
-                sleep(4000);
+                sleep(8000);
                 drive.followTrajectory(farleft2);
                 drive.followTrajectory(farleft3);
                 drive.followTrajectory(farleft4);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .21, .8);
+                servoProfile.generateProfile(.5, .6, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
@@ -238,9 +238,9 @@ public class AutoBlueFar extends LinearOpMode {
                 sleep(300);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
-                sleep(500);
+                sleep(200);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .8, .21);
+                servoProfile.generateProfile(.5, .6, .8, .21);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
@@ -257,7 +257,7 @@ public class AutoBlueFar extends LinearOpMode {
                 Servo armAngle = null;
                 armAngle = hardwareMap.get(Servo.class, "armAngle");
                 armAngle.setPosition(.36);
-                sleep(500);
+                sleep(100);
                 controlHubCam.stopStreaming();
                 drive.followTrajectory(farforward1);
                 armAngle.setPosition(.0);
@@ -267,12 +267,12 @@ public class AutoBlueFar extends LinearOpMode {
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
                 armAngle.setPosition(.36);
-                sleep(4000);
+                sleep(8000);
                 drive.followTrajectory(farforward2);
                 drive.followTrajectory(farforward3);
                 drive.followTrajectory(farforward4);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .21, .8);
+                servoProfile.generateProfile(.5, .6, .21, .8);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .79999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             , fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
@@ -281,9 +281,9 @@ public class AutoBlueFar extends LinearOpMode {
                 sleep(300);
                 scoringservoLeft.setPosition(.05);
                 scoringservoRight.setPosition(.32);
-                sleep(500);
+                sleep(200);
                 runtime.reset();
-                servoProfile.generateProfile(.34, .23, .8, .21);
+                servoProfile.generateProfile(.5, .6, .8, .21);
                 while (servoProfile.servoProfile1.get(runtime.seconds()).getX() <= .20999 && opModeIsActive() || runtime.seconds() < 3 && opModeIsActive()) {
                     servoProfile.setServoPath(intakePower, scoringleftPower, scoringrightPower, bleftDrive, brightDrive
                             ,fleftDrive, frightDrive, intake1, scoring, gamepad1, gamepad2, robot);
